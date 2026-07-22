@@ -3,8 +3,10 @@
 ══════════════════════════════════════════ */
 
 .chaos-page {
-  color: white;
-  background: var(--chaos-night);
+  color: #fffaf4;
+  background:
+    radial-gradient(circle at 14% 8%, rgba(124, 82, 186, 0.28), transparent 30%),
+    linear-gradient(180deg, #0a0819 0%, #17102f 42%, #241442 100%);
   min-height: 100vh;
 }
 

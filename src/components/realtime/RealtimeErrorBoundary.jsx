@@ -11,7 +11,9 @@ export default class RealtimeErrorBoundary extends Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.warn("Realtime Component Handled Error:", error, errorInfo);
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Realtime Component Error:", error, errorInfo);
+    }
   }
 
   handleReset = () => {
@@ -23,9 +25,9 @@ export default class RealtimeErrorBoundary extends Component {
     if (this.state.hasError) {
       return (
         <div
-          className="realtime-error-fallback page-grain"
+          className="realtime-error-fallback"
           style={{
-            minHeight: "60vh",
+            minHeight: "50vh",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -33,23 +35,35 @@ export default class RealtimeErrorBoundary extends Component {
             padding: "3rem 1.5rem",
             textAlign: "center",
             color: "white",
+            background: "rgba(16, 12, 37, 0.95)",
+            borderRadius: "var(--radius-medium)",
+            border: "1px solid rgba(207, 186, 240, 0.2)",
+            margin: "2rem auto",
+            maxWidth: "680px",
           }}
         >
-          <div className="premium-empty-state" style={{ color: "var(--chaos-text-dark)" }}>
-            <span style={{ fontSize: "3rem", display: "block", marginBottom: "0.5rem" }}>📡</span>
-            <h3 style={{ fontSize: "1.5rem", fontFamily: "var(--font-display)", marginBottom: "0.5rem" }}>
-              Connection Notice
-            </h3>
-            <p style={{ opacity: 0.8, fontSize: "0.95rem", maxWidth: 460, marginInline: "auto" }}>
-              Realtime feature encountered a temporary issue. Operating in local mode.
-            </p>
+          <span style={{ fontSize: "3rem", display: "block", marginBottom: "0.5rem" }}>📡</span>
+          <h3 style={{ fontSize: "1.6rem", fontFamily: "var(--font-heading)", color: "var(--chaos-yellow)", marginBottom: "0.5rem" }}>
+            This Memory Corner Took a Small Break
+          </h3>
+          <p style={{ opacity: 0.82, fontSize: "1rem", maxWidth: "480px", marginInline: "auto", lineHeight: 1.6 }}>
+            Something did not load correctly. Try opening the section again.
+          </p>
+          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", justifyContent: "center", marginTop: "1.5rem" }}>
             <button
-              className="primary-button btn-daisy"
-              style={{ marginTop: "1.25rem" }}
+              className="primary-button"
+              style={{ background: "var(--chaos-yellow)", color: "#2a1800" }}
               onClick={this.handleReset}
             >
-              🔄 Retry Connection
+              🔄 Try Again
             </button>
+            <a
+              href="/"
+              className="glow-button"
+              style={{ textDecoration: "none" }}
+            >
+              🏠 Go to Home
+            </a>
           </div>
         </div>
       );

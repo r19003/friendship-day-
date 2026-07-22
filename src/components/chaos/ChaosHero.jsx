@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { chaosHeroCopy } from "../../data/sharedData";
+import { safeSplit } from "../../lib/textHelpers";
+import { sharedChaosData, chaosHeroCopy as fallbackCopy } from "../../data/sharedChaosData";
 
 const BEAMS = [
   { left: "15%", height: "60%", dur: "3.5s", delay: "0s" },
@@ -12,7 +13,7 @@ const BEAMS = [
   { left: "85%", height: "80%", dur: "4.2s", delay: "1.3s" },
 ];
 
-const STARS = Array.from({ length: 30 }, (_, i) => ({
+const STARS = Array.from({ length: 24 }, (_, i) => ({
   top: `${Math.random() * 75}%`,
   left: `${Math.random() * 100}%`,
   size: Math.random() * 3 + 1,
@@ -31,7 +32,19 @@ const COLLAGE_ITEMS = [
     type: "bubble", text: "raina fell asleep 💀" },
 ];
 
-export default function ChaosHero() {
+export default function ChaosHero({ data }) {
+  // Normalize incoming data safely
+  const source = data ?? sharedChaosData?.hero ?? fallbackCopy ?? {};
+  
+  const rawTitle = typeof source.title === "string" && source.title.trim() ? source.title : "Our Chaos Together";
+  const rawLabel = typeof source.label === "string" && source.label.trim() ? source.label : "SHARED TRIO UNIVERSE";
+  const rawSub = typeof source.sub === "string" ? source.sub : (typeof source.subtitle === "string" ? source.subtitle : "Three people, too many plans, questionable sleeping schedules, endless laughter, and memories that made ordinary days feel special.");
+
+  const titleWords = safeSplit(rawTitle);
+  const highlightedWords = Array.isArray(source.highlightedWords)
+    ? source.highlightedWords.map(w => String(w).toLowerCase())
+    : safeSplit(source.highlightedWords, ",").map(w => w.toLowerCase());
+
   return (
     <section className="chaos-hero">
       {/* Concert light beams background */}
@@ -77,7 +90,7 @@ export default function ChaosHero() {
         {COLLAGE_ITEMS.map((item, i) => (
           <div key={i} className="collage-item" style={item.style}>
             {item.type === "polaroid" && (
-              <div className="collage-polaroid" style={{ "--rot": item.style["--rot"] }}>
+              <div className="collage-polaroid chaos-hero__main-polaroid" style={{ "--rot": item.style["--rot"] }}>
                 <div className="collage-polaroid-img">{item.emoji}</div>
                 {item.caption}
               </div>
@@ -99,53 +112,61 @@ export default function ChaosHero() {
 
       {/* Main content */}
       <div className="content-container chaos-hero__content">
-        <motion.span
-          className="chaos-hero__kicker"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        >
-          ✦ {chaosHeroCopy.label} ✦
-        </motion.span>
+        <div>
+          <motion.span
+            className="chaos-hero__kicker"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          >
+            ✦ {rawLabel} ✦
+          </motion.span>
 
-        <motion.h1
-          className="chaos-hero__title"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-        >
-          {chaosHeroCopy.title.split(" ").map((word, i) => (
-            <span key={i}>
-              {i === 1 ? <span className="highlight">{word}</span> : word}{" "}
-            </span>
-          ))}
-        </motion.h1>
+          <motion.h1
+            className="chaos-hero__title"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {titleWords.length > 0 ? (
+              titleWords.map((word, i) => {
+                const isHighlight = i === 1 || highlightedWords.includes(word.toLowerCase());
+                return (
+                  <span key={`${word}-${i}`}>
+                    {isHighlight ? <span className="highlight">{word}</span> : word}{" "}
+                  </span>
+                );
+              })
+            ) : (
+              <span>Our Chaos Together</span>
+            )}
+          </motion.h1>
 
-        <motion.p
-          className="chaos-hero__sub"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-        >
-          {chaosHeroCopy.sub}
-        </motion.p>
+          <motion.p
+            className="chaos-hero__sub chaos-hero__copy"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {rawSub}
+          </motion.p>
 
-        <motion.div
-          style={{ display: "flex", gap: "0.85rem", flexWrap: "wrap" }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <a href="#bts-timeline" className="glow-button">💜 BTS Timeline</a>
-          <a href="#awards" className="primary-button" style={{ background: "var(--chaos-yellow)", color: "#2a1800" }}>🏆 Awards</a>
-          <Link to="/aparna" className="primary-button" style={{ background: "var(--daisy-yellow)", color: "#4a3800" }}>🌼 Daisy</Link>
-          <Link to="/saayra" className="primary-button" style={{ background: "var(--sunshine-purple)", color: "white" }}>☀️ Sunshine</Link>
-        </motion.div>
+          <motion.div
+            style={{ display: "flex", gap: "0.85rem", flexWrap: "wrap", marginTop: "1.5rem" }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <a href="#bts-timeline" className="glow-button">💜 BTS Timeline</a>
+            <Link to="/aparna" className="primary-button" style={{ background: "var(--daisy-yellow)", color: "#4a3800" }}>🌼 Daisy</Link>
+            <Link to="/saayra" className="primary-button" style={{ background: "var(--sunshine-purple)", color: "white" }}>☀️ Sunshine</Link>
+          </motion.div>
+        </div>
       </div>
 
       {/* Scroll hint */}
-      <div className="home-scroll-indicator" aria-hidden="true">
-        <span className="home-scroll-indicator__line" />
+      <div className="scroll-indicator" aria-hidden="true">
+        <span className="scroll-indicator__line" />
         <span>scroll</span>
       </div>
     </section>

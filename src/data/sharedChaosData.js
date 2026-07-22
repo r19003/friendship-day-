@@ -1,6 +1,28 @@
 // ══════════════════════════════════════════
-// SHARED CHAOS DATA (Categories & Note Colors — No Seed Data)
+// SHARED CHAOS DATA (Hero Copy & Categories — No Seed Data)
 // ══════════════════════════════════════════
+
+export const chaosHeroCopy = {
+  label: "SHARED TRIO UNIVERSE",
+  title: "Our Chaos Together",
+  subtitle:
+    "Three people, too many plans, questionable sleeping schedules, endless laughter, and memories that made ordinary days feel special.",
+  sub:
+    "Three people, too many plans, questionable sleeping schedules, endless laughter, and memories that made ordinary days feel special.",
+  supportingText:
+    "From college plans and night stays to BTS, food runs, events, work, and everything still waiting for us.",
+  highlightedWords: [
+    "laughter",
+    "memories",
+    "BTS",
+    "college",
+    "still us"
+  ]
+};
+
+export const sharedChaosData = {
+  hero: chaosHeroCopy,
+};
 
 export const seedBucketListItems = [];
 
