@@ -1,0 +1,193 @@
+/* ══════════════════════════════════════════
+   SEMESTER ARCHIVE STYLES
+══════════════════════════════════════════ */
+.semester-archive-section {
+  padding-block: clamp(5rem, 8vw, 8rem);
+  background: linear-gradient(180deg, #0f0a26, #180d38 50%, var(--chaos-night));
+  color: white;
+  position: relative;
+}
+
+.semester-tabs-container {
+  position: relative;
+  margin-bottom: 2.5rem;
+  padding-top: 1rem;
+}
+
+.semester-thread-svg {
+  position: absolute;
+  top: 50%; left: 0; right: 0;
+  width: 100%; height: 30px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.semester-tabs-track {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 1rem 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.2) transparent;
+  position: relative;
+  z-index: 2;
+}
+
+.semester-tab-card {
+  flex: 1;
+  min-width: 140px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: transform var(--transition-quick), background var(--transition-quick), border-color var(--transition-quick), box-shadow var(--transition-quick);
+  color: white;
+}
+
+.semester-tab-card:hover, .semester-tab-card.active {
+  transform: translateY(-6px);
+  background: linear-gradient(145deg, rgba(154, 112, 210, 0.28), rgba(255,255,255,0.08));
+  border-color: var(--chaos-yellow);
+  box-shadow: 0 0 25px rgba(154, 112, 210, 0.35);
+}
+
+.tab-sem-num { font-size: 0.72rem; font-weight: 900; letter-spacing: 0.15em; color: var(--chaos-yellow); font-family: var(--font-body); display: block; margin-bottom: 0.25rem; }
+.tab-sem-title { font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 0.2rem; }
+.tab-sem-date { font-size: 0.75rem; opacity: 0.65; font-family: var(--font-body); }
+
+.semester-active-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+}
+
+.sem-nav-btn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+  color: white; border-radius: var(--radius-pill); padding: 0.5rem 1rem;
+  font-size: 0.85rem; font-weight: 700; cursor: pointer;
+  transition: background var(--transition-quick);
+}
+.sem-nav-btn:hover { background: rgba(255,255,255,0.18); }
+
+.sem-active-meta { text-align: center; }
+.sem-counter-badge { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--chaos-yellow); letter-spacing: 0.12em; }
+.sem-active-title { font-family: var(--font-display); font-size: 1.8rem; margin: 0.2rem 0; }
+.sem-active-desc { font-size: 0.95rem; opacity: 0.75; }
+
+.semester-media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.video-memory-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  background: #130d27;
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow:
+    0 20px 55px rgba(7, 4, 20, 0.25),
+    0 40px 100px rgba(7, 4, 20, 0.18);
+  cursor: pointer;
+  transition: transform var(--transition-quick), box-shadow var(--transition-quick);
+}
+.video-memory-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 25px 65px rgba(154, 112, 210, 0.3);
+}
+
+.video-memory-card__poster {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.video-memory-card__poster img {
+  width: 100%; height: 100%; object-fit: cover;
+  object-position: var(--object-position, center);
+}
+
+.video-memory-card__play {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 62px; height: 62px;
+  display: grid; place-items: center;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  background: rgba(42, 24, 78, 0.78);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.32), 0 0 35px rgba(176, 131, 237, 0.25);
+  backdrop-filter: blur(12px);
+  transition: transform 220ms ease, background-color 220ms ease;
+}
+
+.video-memory-card__play:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+  background: rgba(111, 69, 167, 0.92);
+}
+
+.video-tag {
+  position: absolute; top: 12px; right: 12px;
+  background: rgba(0,0,0,0.6); color: white;
+  border-radius: var(--radius-pill); padding: 0.2rem 0.6rem;
+  font-size: 0.72rem; font-weight: 800; backdrop-filter: blur(4px);
+}
+
+.video-card-info { padding: 1.25rem; }
+.video-caption { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+.video-date { font-size: 0.78rem; opacity: 0.55; }
+
+/* Lightbox Modal */
+.media-lightbox-backdrop {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(8, 5, 20, 0.92);
+  backdrop-filter: blur(16px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem;
+}
+
+.media-lightbox-content {
+  position: relative; max-width: 900px; width: 100%;
+  background: #150d2e; border-radius: var(--radius-lg);
+  border: 1px solid rgba(255,255,255,0.18);
+  overflow: hidden; box-shadow: 0 30px 90px rgba(0,0,0,0.6);
+}
+
+.lightbox-close-btn {
+  position: absolute; top: 1rem; right: 1rem; z-index: 10;
+  background: rgba(0,0,0,0.5); border: 0; color: white;
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background var(--transition-quick);
+}
+.lightbox-close-btn:hover { background: rgba(255,255,255,0.2); }
+
+.lightbox-media-container {
+  width: 100%; max-height: 65vh; background: black;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+
+.lightbox-image { max-width: 100%; max-height: 65vh; object-fit: contain; }
+.lightbox-video-player { width: 100%; max-height: 65vh; }
+
+.lightbox-info-bar { padding: 1.5rem; text-align: center; }
+.lightbox-category { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--chaos-yellow); letter-spacing: 0.1em; display: block; margin-bottom: 0.4rem; }
+.lightbox-caption { font-size: 1.1rem; color: white; }
+
+@media (max-width: 768px) {
+  .semester-active-header { flex-direction: column; gap: 1rem; text-align: center; }
+  .sem-nav-btn { width: 100%; justify-content: center; }
+}

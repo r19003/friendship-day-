@@ -1,0 +1,40 @@
+/* ══════════════════════════════════════════
+   REALTIME STATUS & PRESENCE STYLES
+══════════════════════════════════════════ */
+.connection-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0.85rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  backdrop-filter: blur(8px);
+}
+
+.status-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+}
+.status-dot.connected { background: #43845f; box-shadow: 0 0 8px #43845f; animation: realtimePulse 2s infinite; }
+.status-dot.reconnecting { background: var(--chaos-yellow); animation: realtimePulse 1s infinite; }
+.status-dot.local_mode { background: #8a809b; }
+
+.status-label { font-weight: 700; opacity: 0.85; }
+
+.role-selector {
+  display: flex; align-items: center; gap: 0.3rem;
+  border-left: 1px solid rgba(255,255,255,0.15);
+  padding-left: 0.6rem; margin-left: 0.2rem;
+}
+
+.role-select {
+  background: transparent; border: 0; color: var(--chaos-yellow);
+  font-weight: 800; font-size: 0.8rem; cursor: pointer; outline: none;
+}
+.role-select option { background: #1a1233; color: white; }
+
+.online-presence {
+  display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; opacity: 0.85;
+}
+.online-presence.local { opacity: 0.6; font-style: italic; }

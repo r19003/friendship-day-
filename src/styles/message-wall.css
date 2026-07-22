@@ -1,0 +1,88 @@
+/* ══════════════════════════════════════════
+   MESSAGE WALL STYLES (Prompt #41)
+══════════════════════════════════════════ */
+.message-wall-section {
+  padding-block: clamp(5rem, 8vw, 8rem);
+  background: linear-gradient(180deg, var(--chaos-night), #140c2e);
+  color: white;
+}
+
+.message-wall-form-wrapper {
+  text-align: center; margin-bottom: 2rem;
+}
+
+.message-wall-form {
+  max-width: 580px; margin-inline: auto;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18);
+  border-radius: var(--radius-lg); padding: 2rem; text-align: left;
+  backdrop-filter: blur(12px); box-shadow: var(--shadow-floating);
+}
+
+.form-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+.close-form-btn { background: none; border: 0; color: white; font-size: 1.2rem; cursor: pointer; }
+
+.color-picker-row, .category-select-row {
+  display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;
+}
+
+.color-dot {
+  width: 24px; height: 24px; border-radius: 50%; border: 2px solid transparent;
+  cursor: pointer; transition: transform var(--transition-quick);
+}
+.color-dot.selected { transform: scale(1.2); border-color: white; }
+
+.wall-category-select {
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+  color: white; border-radius: var(--radius-sm); padding: 0.4rem 0.75rem;
+  font-size: 0.85rem; font-family: var(--font-body);
+}
+
+.wall-textarea {
+  width: 100%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+  border-radius: var(--radius-md); padding: 1rem; color: white;
+  font-family: var(--font-handwritten); font-size: 1.25rem; outline: none;
+  resize: vertical; margin-bottom: 1rem;
+}
+
+.wall-form-footer { display: flex; justify-content: space-between; align-items: center; }
+
+.message-wall-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem; margin-top: 2rem;
+}
+
+.message-wall-note {
+  border-radius: var(--radius-md);
+  padding: 1.75rem 1.5rem 1.25rem;
+  box-shadow: var(--shadow-paper);
+  transform: rotate(var(--note-rotation, 0deg));
+  transition: transform var(--transition-standard), box-shadow var(--transition-standard);
+  position: relative;
+}
+.message-wall-note:hover {
+  transform: rotate(0deg) translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-floating); z-index: 5;
+}
+
+.note-pushpin { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); font-size: 1.4rem; }
+.note-washi-tape {
+  position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotate(-3deg);
+  width: 70px; height: 20px; background: rgba(255,255,255,0.4);
+}
+
+.note-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; opacity: 0.85; margin-bottom: 0.5rem; }
+.note-category-badge { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.75; display: block; margin-bottom: 0.75rem; }
+
+.note-content { font-size: 1.25rem; line-height: 1.5; margin-bottom: 1.25rem; }
+
+.note-footer { display: flex; justify-content: space-between; align-items: center; }
+.note-reactions { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.note-reaction-btn {
+  background: rgba(0,0,0,0.06); border: 0; border-radius: var(--radius-pill);
+  padding: 0.2rem 0.5rem; font-size: 0.8rem; cursor: pointer;
+  transition: transform 0.1s;
+}
+.note-reaction-btn:hover { transform: scale(1.15); }
+.note-delete-btn { background: none; border: 0; opacity: 0.6; cursor: pointer; }
+.note-delete-btn:hover { opacity: 1; }

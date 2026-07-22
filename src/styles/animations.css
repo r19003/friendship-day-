@@ -1,0 +1,191 @@
+/* ══════════════════════════════════════════
+   ANIMATIONS — Daisy, Sunshine & Me  v2
+══════════════════════════════════════════ */
+
+/* ── Existing keyframes ── */
+@keyframes floatSoft {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%       { transform: translateY(-14px) rotate(1deg); }
+}
+
+@keyframes sunPulse {
+  0%, 100% { transform: scale(1); opacity: 0.78; }
+  50%       { transform: scale(1.06); opacity: 1; }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.7); }
+  50%       { opacity: 1; transform: scale(1.15); }
+}
+
+@keyframes ringPulse {
+  0%   { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes messagePop {
+  0%   { opacity: 0; transform: translateY(14px) scale(0.95); }
+  70%  { transform: translateY(-2px) scale(1.02); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes petalFall {
+  from { transform: translate3d(0, -15vh, 0) rotate(0deg); opacity: 1; }
+  to   { transform: translate3d(30px, 110vh, 0) rotate(300deg); opacity: 0; }
+}
+
+@keyframes daisyFloat {
+  0%   { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-130px) scale(0.5); }
+}
+
+@keyframes firefly {
+  0%, 100% { opacity: 0.15; transform: translate(0, 0); }
+  25%       { opacity: 0.8; transform: translate(12px, -18px); }
+  50%       { opacity: 0.3; transform: translate(-8px, -35px); }
+  75%       { opacity: 0.95; transform: translate(15px, -50px); }
+}
+
+@keyframes paperReveal {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes daisyGrow {
+  0%   { transform: scale(0.2) rotate(-15deg); opacity: 0; }
+  70%  { transform: scale(1.08) rotate(3deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes petalOpen {
+  0%   { transform: scale(0.7); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pageTurn {
+  0%   { transform: perspective(1000px) rotateY(-20deg); opacity: 0.7; }
+  100% { transform: perspective(1000px) rotateY(0deg); opacity: 1; }
+}
+
+@keyframes drawerOpen {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(8px); }
+  100% { transform: translateY(4px); }
+}
+
+@keyframes noteUnfold {
+  0%   { transform: scaleY(0.1) scaleX(0.8); opacity: 0; }
+  70%  { transform: scaleY(1.05) scaleX(1.02); opacity: 1; }
+  100% { transform: scaleY(1) scaleX(1); opacity: 1; }
+}
+
+@keyframes warmGlow {
+  0%, 100% { box-shadow: 0 0 15px rgba(247, 216, 102, 0.2); }
+  50%       { box-shadow: 0 0 35px rgba(247, 216, 102, 0.5); }
+}
+
+@keyframes braceletLight {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50%       { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes spotifyStarDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%       { transform: translate(6px, -10px) scale(1.15); }
+}
+
+@keyframes spotifyAura {
+  0%, 100% { transform: rotate(0deg) scale(1); opacity: 0.25; }
+  50%       { transform: rotate(180deg) scale(1.08); opacity: 0.45; }
+}
+
+@keyframes musicIconPulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.15); }
+}
+
+/* ── New Premium Keyframes (Prompt #42) ── */
+@keyframes mediaDevelopLive {
+  0% {
+    opacity: 0;
+    filter: brightness(1.8) saturate(0.15);
+    transform: translateY(35px) rotate(-3deg) scale(0.9);
+  }
+  55% {
+    opacity: 1;
+    filter: brightness(1.25) saturate(0.65);
+  }
+  100% {
+    opacity: 1;
+    filter: brightness(1) saturate(1);
+    transform: translateY(0) rotate(var(--rotation, 0deg)) scale(1);
+  }
+}
+
+@keyframes filmStripIn {
+  from {
+    opacity: 0;
+    transform: translateX(60px) rotate(3deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0);
+  }
+}
+
+@keyframes envelopeSeal {
+  0% {
+    transform: scale(1.15) rotate(-4deg);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(0.94) rotate(1deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes presenceAppear {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes threadProgress {
+  from {
+    stroke-dashoffset: var(--thread-length, 1200);
+  }
+  to {
+    stroke-dashoffset: calc(var(--thread-length, 1200) * (1 - var(--scroll-progress, 0)));
+  }
+}
+
+@keyframes moodTagSwing {
+  0%   { transform: rotate(0); }
+  30%  { transform: rotate(5deg); }
+  65%  { transform: rotate(-3deg); }
+  100% { transform: rotate(0); }
+}
+
+@keyframes pollVoteFill {
+  from {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  to {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}

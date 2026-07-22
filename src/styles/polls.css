@@ -1,0 +1,57 @@
+/* ══════════════════════════════════════════
+   COLLABORATIVE POLLS STYLES
+══════════════════════════════════════════ */
+.polls-section {
+  padding-block: clamp(4rem, 7vw, 7rem);
+  background: linear-gradient(180deg, #1a0f38, #120926);
+  color: white;
+}
+
+.poll-create-form {
+  max-width: 540px; margin-inline: auto; margin-bottom: 2.5rem;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18);
+  border-radius: var(--radius-md); padding: 1.5rem; text-align: left;
+}
+
+.polls-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem; max-width: 940px; margin-inline: auto;
+}
+
+.poll-card {
+  background: linear-gradient(145deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-md); padding: 1.5rem; color: white;
+}
+
+.poll-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+.poll-author { font-size: 0.78rem; opacity: 0.6; }
+
+.poll-question { font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 1.25rem; }
+
+.poll-options-list { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1rem; }
+
+.poll-option-btn {
+  position: relative; width: 100%; text-align: left;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14);
+  border-radius: var(--radius-sm); padding: 0.75rem 1rem; color: white;
+  cursor: pointer; overflow: hidden; transition: border-color var(--transition-quick);
+}
+.poll-option-btn:hover { border-color: var(--chaos-yellow); }
+.poll-option-btn.voted { border-color: var(--chaos-yellow); background: rgba(245,207,103,0.1); }
+
+.poll-option-fill {
+  position: absolute; top: 0; bottom: 0; left: 0;
+  background: linear-gradient(90deg, rgba(154, 112, 210, 0.35), rgba(245, 207, 103, 0.35));
+  transition: width 0.4s ease; pointer-events: none;
+}
+
+.poll-option-content {
+  position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.88rem; font-weight: 700;
+}
+.opt-text { display: flex; align-items: center; gap: 0.4rem; }
+.voted-icon { color: var(--chaos-yellow); }
+.opt-percent { opacity: 0.7; font-size: 0.8rem; }
+
+.poll-footer { font-size: 0.75rem; opacity: 0.55; text-align: right; }

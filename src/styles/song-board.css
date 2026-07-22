@@ -1,0 +1,45 @@
+/* ══════════════════════════════════════════
+   SONG RECOMMENDATIONS BOARD STYLES
+══════════════════════════════════════════ */
+.song-board-section {
+  padding-block: clamp(4rem, 7vw, 7rem);
+  background: linear-gradient(180deg, #120926, #1a0f38);
+  color: white;
+}
+
+.song-form {
+  max-width: 580px; margin-inline: auto; margin-bottom: 2.5rem;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18);
+  border-radius: var(--radius-md); padding: 1.5rem; text-align: left;
+}
+
+.song-cards-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem; max-width: 940px; margin-inline: auto;
+}
+
+.song-recommendation-card {
+  background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-md); padding: 1.5rem; color: white;
+  transition: transform var(--transition-quick), border-color var(--transition-quick);
+}
+.song-recommendation-card:hover { transform: translateY(-3px); border-color: rgba(245,207,103,0.3); }
+.song-recommendation-card.added { border-color: var(--success); }
+
+.song-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+
+.added-badge-btn {
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+  color: white; border-radius: var(--radius-pill); padding: 0.25rem 0.65rem;
+  font-size: 0.72rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.3rem;
+}
+.added-badge-btn.is-added { background: rgba(67, 132, 95, 0.3); border-color: #43845f; color: #6ee7b7; }
+
+.song-title { font-family: var(--font-display); font-size: 1.4rem; color: white; margin-bottom: 0.15rem; }
+.song-artist { font-size: 0.88rem; opacity: 0.7; margin-bottom: 0.75rem; }
+.song-reason { font-family: var(--font-handwritten); font-size: 1.15rem; color: var(--chaos-yellow); margin-bottom: 1rem; line-height: 1.4; }
+
+.song-meta-footer { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; opacity: 0.6; }
+.spotify-link-btn { color: #1db954; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; }
+.spotify-link-btn:hover { text-decoration: underline; }

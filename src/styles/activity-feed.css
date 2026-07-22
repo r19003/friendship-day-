@@ -1,0 +1,88 @@
+/* ══════════════════════════════════════════
+   ACTIVITY FEED & REALTIME TOAST STYLES
+══════════════════════════════════════════ */
+.activity-feed-section {
+  padding-block: clamp(4rem, 7vw, 7rem);
+  background: linear-gradient(180deg, #120926, #1b0f38);
+  color: white;
+}
+
+.activity-feed-timeline {
+  position: relative; max-width: 680px; margin-inline: auto;
+  padding-left: 2.5rem;
+}
+
+.activity-thread-line {
+  position: absolute; top: 0; bottom: 0; left: 1rem;
+  width: 2px; background: linear-gradient(to bottom, var(--chaos-violet), var(--chaos-yellow));
+}
+
+.activity-item {
+  position: relative; margin-bottom: 1.5rem;
+  display: flex; gap: 1rem; align-items: flex-start;
+}
+
+.activity-icon-badge {
+  position: absolute; left: -2.5rem; top: 2px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #251648; border: 2px solid var(--chaos-yellow);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--chaos-yellow); box-shadow: 0 0 12px rgba(245,207,103,0.3);
+}
+
+.activity-content {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-md); padding: 0.85rem 1.1rem; flex: 1;
+}
+
+.activity-summary { font-size: 0.93rem; color: white; margin-bottom: 0.25rem; }
+.activity-time { font-size: 0.75rem; opacity: 0.55; }
+
+/* Realtime Toast Stack */
+.realtime-toast-stack {
+  position: fixed;
+  z-index: 2500;
+  top: 5.75rem;
+  right: 1rem;
+  width: min(360px, calc(100vw - 2rem));
+  display: grid;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.realtime-toast {
+  pointer-events: auto;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.8rem;
+  align-items: start;
+  padding: 0.9rem 1rem;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 18px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(28, 16, 55, 0.96),
+      rgba(69, 38, 105, 0.94)
+    );
+  box-shadow:
+    0 18px 55px rgba(4, 2, 15, 0.38),
+    0 0 35px rgba(138, 92, 201, 0.16);
+  backdrop-filter: blur(18px);
+  animation: realtimeToastIn 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toast-close-btn { background: none; border: 0; color: white; opacity: 0.6; cursor: pointer; }
+.toast-close-btn:hover { opacity: 1; }
+
+@keyframes realtimeToastIn {
+  from {
+    opacity: 0;
+    transform: translateX(35px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
