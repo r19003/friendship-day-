@@ -1,44 +1,61 @@
 /* ══════════════════════════════════════════
    DESIGN TOKENS — Daisy, Sunshine & Me
-   Visual Overhaul v2
+   Clean & Controlled System
 ══════════════════════════════════════════ */
 
 :root {
-  /* ── Fonts ── */
-  --font-display: "Cormorant Garamond", "Instrument Serif", Georgia, serif;
-  --font-body: "Nunito", "Inter", -apple-system, Arial, sans-serif;
+  /* ── Typography ── */
+  --font-heading: "Cormorant Garamond", Georgia, serif;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-body: "Nunito", Arial, sans-serif;
   --font-handwritten: "Caveat", cursive;
 
-  /* ── Layout ── */
-  --page-width: 1280px;
+  /* ── Spacing & Layout ── */
+  --content-width: 1240px;
+  --page-width: 1240px;
   --reading-width: 760px;
-  --space-section: clamp(5.5rem, 10vw, 10rem);
-  --space-section-mobile: 4.5rem;
 
-  /* ── Radii ── */
-  --radius-xs: 10px;
-  --radius-sm: 16px;
-  --radius-md: 24px;
-  --radius-lg: 36px;
-  --radius-xl: 52px;
+  --section-space: clamp(5rem, 8vw, 8rem);
+  --space-section: clamp(5rem, 8vw, 8rem);
+  --section-space-desktop: clamp(5rem, 8vw, 8rem);
+  --section-space-mobile: 4rem;
+
+  /* ── Radius System ── */
+  --radius-small: 12px;
+  --radius-medium: 20px;
+  --radius-large: 32px;
   --radius-pill: 999px;
 
-  /* ── Shadows ── */
-  --shadow-paper:
-    0 12px 25px rgba(24, 18, 43, 0.08),
-    0 32px 75px rgba(24, 18, 43, 0.12);
-  --shadow-floating:
-    0 20px 55px rgba(25, 18, 50, 0.18),
-    0 45px 100px rgba(25, 18, 50, 0.12);
-  --shadow-dark:
-    0 30px 90px rgba(5, 3, 18, 0.42);
-  --shadow-sm:
-    0 8px 20px rgba(24, 18, 43, 0.07);
+  --radius-xs: 12px;
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 32px;
+  --radius-xl: 32px;
 
-  /* ── Transitions ── */
+  /* ── Z-Index System ── */
+  --z-background: 0;
+  --z-decoration: 5;
+  --z-content: 10;
+  --z-floating: 50;
+  --z-navigation: 100;
+  --z-modal: 1000;
+  --z-toast: 1200;
+
+  /* ── Shadow System ── */
+  --shadow-soft: 0 14px 35px rgba(31, 23, 45, 0.1);
+  --shadow-floating: 0 24px 65px rgba(31, 23, 45, 0.16);
+  --shadow-paper: 0 12px 25px rgba(24, 18, 43, 0.08), 0 32px 75px rgba(24, 18, 43, 0.12);
+  --shadow-dark: 0 30px 90px rgba(5, 3, 18, 0.42);
+  --shadow-sm: 0 8px 20px rgba(24, 18, 43, 0.07);
+  --shadow-xs: 0 4px 12px rgba(24, 18, 43, 0.05);
+
+  /* ── Transition Timing System ── */
+  --transition-fast: 180ms ease;
+  --transition-normal: 380ms cubic-bezier(0.2, 0.75, 0.2, 1);
+  --transition-slow: 700ms cubic-bezier(0.16, 1, 0.3, 1);
   --transition-quick: 180ms ease;
-  --transition-standard: 420ms cubic-bezier(0.2, 0.75, 0.2, 1);
-  --transition-smooth: 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-standard: 380ms cubic-bezier(0.2, 0.75, 0.2, 1);
+  --transition-smooth: 700ms cubic-bezier(0.16, 1, 0.3, 1);
 
   /* ── Color System: APARNA (Daisy Universe) ── */
   --daisy-cream: #faf5ea;
@@ -53,6 +70,7 @@
   --daisy-text: #2f2a33;
   --daisy-muted: #6b6373;
   --daisy-border: rgba(220, 205, 185, 0.6);
+  --daisy-surface: #f5eedf;
 
   /* ── Color System: SAAYRA (Sunshine Universe) ── */
   --sunshine-cream: #faf4eb;
@@ -65,6 +83,7 @@
   --sunshine-text: #2c2038;
   --sunshine-muted: #685778;
   --sunshine-deep: #1a0f2b;
+  --sunshine-lilac: #ebdcf7;
 
   /* ── Color System: OUR CHAOS (Shared Universe) ── */
   --chaos-midnight: #0b0716;
@@ -81,6 +100,11 @@
   /* ── Accents ── */
   --bts-purple: #9b51e0;
   --bts-purple-light: #d8b4f8;
+  --shared-purple: #8d6ad8;
+  --shared-purple-light: #cfbaf0;
+  --shared-gold: #f7c568;
+  --shared-night: #140c26;
+  --shared-midnight: #0b0716;
   --success: #43845f;
   --error: #bc4747;
   --focus: #7952a4;
