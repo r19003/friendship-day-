@@ -1,78 +1,88 @@
-import React, { useState, useMemo } from "react";
-import { Sparkles, RefreshCw } from "lucide-react";
-import { semesterArchive } from "../../data/semesterGalleryData";
+import { useMemo } from "react";
+import { normalizeMemoryItem } from "../../lib/mediaHelpers";
 
-export default function TodayMemory() {
-  const allMemories = useMemo(() => {
-    const list = [];
-    semesterArchive.forEach((sem) => {
-      sem.items.forEach((item) => {
-        list.push({ ...item, semesterTitle: sem.title });
-      });
-    });
-    return list;
-  }, []);
+function getDailyIndex(length) {
+  if (!Number.isInteger(length) || length <= 0) {
+    return 0;
+  }
 
-  // Deterministic memory selection based on day of year
-  const getDailyIndex = () => {
-    const now = new Date();
-    const start = new Date(now.getFullYear(), 0, 0);
-    const diff = now - start;
-    const oneDay = 1000 * 60 * 60 * 24;
-    const dayOfYear = Math.floor(diff / oneDay);
-    return dayOfYear % allMemories.length;
-  };
+  const today = new Date();
+  const dateKey = Number(
+    `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, "0")}${String(today.getDate()).padStart(2, "0")}`
+  );
 
-  const [currentIndex, setCurrentIndex] = useState(getDailyIndex);
+  return dateKey % length;
+}
 
-  const currentMemory = allMemories[currentIndex] || allMemories[0];
+export default function TodayMemory({ memories = [], isLoading = false, onAddMemory }) {
+  const validMemories = useMemo(() => {
+    if (!Array.isArray(memories)) {
+      return [];
+    }
 
-  const handleShowAnother = () => {
-    setCurrentIndex((prev) => (prev + 1) % allMemories.length);
-  };
+    return memories.map(normalizeMemoryItem).filter(Boolean);
+  }, [memories]);
+
+  if (isLoading) {
+    return (
+      <section className="today-memory today-memory--loading">
+        <div className="today-memory__skeleton" />
+        <p>Looking through our memories…</p>
+      </section>
+    );
+  }
+
+  if (validMemories.length === 0) {
+    return (
+      <section className="today-memory today-memory--empty">
+        <div className="today-memory__empty-icon" aria-hidden="true">
+          📷
+        </div>
+
+        <p className="section-kicker">Today’s Memory</p>
+        <h2>No memory has been added yet</h2>
+        <p>
+          Add a real photograph or video to the semester archive, Daisy,
+          Sunshine, or Our Chaos gallery. One of those memories will appear
+          here each day.
+        </p>
+
+        {typeof onAddMemory === "function" && (
+          <button type="button" className="button button--chaos" onClick={onAddMemory}>
+            Add Our First Memory
+          </button>
+        )}
+      </section>
+    );
+  }
+
+  const selectedIndex = getDailyIndex(validMemories.length);
+  const selectedMemory = validMemories[selectedIndex];
+  const isVideo = selectedMemory.type === "video";
 
   return (
-    <section id="today-memory" className="today-memory-section page-grain">
-      <div className="content-container">
-        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-          <span className="section-kicker" style={{ color: "var(--chaos-yellow)", justifyContent: "center" }}>
-            ✨ Daily Memory Highlight
-          </span>
-          <h2 className="section-title" style={{ color: "white", marginBottom: "0.5rem" }}>
-            Today's Memory
-          </h2>
-          <p style={{ color: "rgba(255,255,255,0.75)", maxWidth: 540, marginInline: "auto" }}>
-            A single moment chosen from our archive for today.
-          </p>
-        </div>
+    <section className="today-memory">
+      <div className="today-memory__media">
+        {isVideo ? (
+          <video controls preload="metadata" poster={selectedMemory.poster || undefined}>
+            <source src={selectedMemory.src} type={selectedMemory.mime_type || "video/mp4"} />
+            Your browser does not support this video.
+          </video>
+        ) : (
+          <img
+            src={selectedMemory.src}
+            alt={selectedMemory.alt_text || selectedMemory.alt || "A friendship memory"}
+            loading="lazy"
+          />
+        )}
+      </div>
 
-        <div className="today-memory-card">
-          <div className="today-memory-media">
-            {currentMemory.type === "video" ? (
-              <video src={currentMemory.src} poster={currentMemory.poster} controls className="today-media-element" />
-            ) : (
-              <img src={currentMemory.src} alt={currentMemory.caption} className="today-media-element" />
-            )}
-            <span className="today-badge">📅 Today's Pick · {currentMemory.semesterTitle}</span>
-          </div>
+      <div className="today-memory__content">
+        <p className="section-kicker">Today’s Memory</p>
+        <h2>{selectedMemory.caption?.trim() || "A memory from our archive"}</h2>
 
-          <div className="today-memory-body">
-            <h3 className="today-caption">{currentMemory.caption}</h3>
-            {currentMemory.handwrittenNote && (
-              <p className="handwritten-note" style={{ color: "var(--chaos-yellow)", fontSize: "1.3rem", marginBlock: "0.5rem" }}>
-                "{currentMemory.handwrittenNote}"
-              </p>
-            )}
-            <div className="today-meta">
-              <span>Category: {currentMemory.category}</span>
-              {currentMemory.date && <span>Date: {currentMemory.date}</span>}
-            </div>
-
-            <button className="primary-button btn-chaos" onClick={handleShowAnother} style={{ marginTop: "1.25rem", width: "100%" }}>
-              <RefreshCw size={16} /> Show Another Memory
-            </button>
-          </div>
-        </div>
+        {selectedMemory.handwritten_note && <p className="handwritten-note">{selectedMemory.handwritten_note}</p>}
+        {selectedMemory.date_label && <time>{selectedMemory.date_label}</time>}
       </div>
     </section>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import PageTransition from "../components/common/PageTransition";
 import ChaosHero from "../components/chaos/ChaosHero";
 import TrioMemories from "../components/chaos/TrioMemories";
@@ -15,6 +15,7 @@ import BTSTimeline from "../components/chaos/BTSTimeline";
 import BTSSongs from "../components/chaos/BTSSongs";
 import SpotifySection from "../components/chaos/SpotifySection";
 import SemesterArchive from "../components/galleries/SemesterArchive";
+import AMIContractSection from "../components/chaos/AMIContractSection";
 import SharedBucketList from "../components/bucket-list/SharedBucketList";
 import ChaosChat from "../components/chat/ChaosChat";
 import MessageWall from "../components/message-wall/MessageWall";
@@ -25,8 +26,24 @@ import SongRecommendations from "../components/chaos/SongRecommendations";
 import CollaborativePolls from "../components/chaos/CollaborativePolls";
 import { ActivityFeed } from "../components/activity/ActivityFeed";
 import ChaosWall from "../components/chaos/ChaosWall";
+import { semesterArchive } from "../data/semesterGalleryData";
+import "../styles/chaos.css";
+import "../styles/semester-gallery.css";
+import "../styles/chat.css";
+import "../styles/message-wall.css";
+import "../styles/bucket-list.css";
 
 export default function ChaosPage() {
+  const allMemories = useMemo(() => {
+    const memorySources = [semesterArchive];
+    return memorySources
+      .filter(Array.isArray)
+      .flat()
+      .flatMap((section) => (Array.isArray(section?.items) ? section.items : []))
+      .map((item) => ({ ...item }))
+      .filter(Boolean);
+  }, []);
+
   return (
     <PageTransition>
       <div className="chaos-page">
@@ -44,37 +61,18 @@ export default function ChaosPage() {
         <BTSTimeline />
         <BTSSongs />
         <SpotifySection />
-        
-        {/* Six Semesters of Us Archive */}
+
         <SemesterArchive />
-
-        {/* Memory of the Day */}
-        <TodayMemory />
-
-        {/* Shared Friend Mood Check-In */}
+        <TodayMemory memories={allMemories} />
+        <AMIContractSection />
         <MoodCheckIn />
-
-        {/* Time Capsules */}
         <MemoryCapsules />
-
-        {/* Realtime AMI Live Chat */}
         <ChaosChat />
-
-        {/* Collaborative Trio Bucket List */}
         <SharedBucketList />
-
-        {/* Collaborative Polls */}
         <CollaborativePolls />
-
-        {/* Song Recommendation Board */}
         <SongRecommendations />
-
-        {/* Realtime Permanent Message Wall */}
         <MessageWall />
-
-        {/* Live Activity Feed */}
         <ActivityFeed />
-
         <ChaosWall />
       </div>
     </PageTransition>

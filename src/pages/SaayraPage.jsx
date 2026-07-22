@@ -11,14 +11,16 @@ import FeedSunshine from "../components/saayra/FeedSunshine";
 import PersonalGallery from "../components/galleries/PersonalGallery";
 import { saayraGallery } from "../data/saayraGalleryData";
 import SaayraThankYouWall from "../components/saayra/SaayraThankYouWall";
-import SunshinePoem from "../components/saayra/SunshinePoem";
 import SunshineRoastRoom from "../components/saayra/SunshineRoastRoom";
+import SunshinePoem from "../components/saayra/SunshinePoem";
 import SaayraLetter from "../components/saayra/SaayraLetter";
+import "../styles/saayra.css";
+import "../styles/stackable-gallery.css";
 
 export default function SaayraPage() {
   return (
     <PageTransition>
-      <div className="saayra-page">
+      <div className="sunshine-page">
         <SunshineHero />
         <NB107Story />
         <CakeMemory />
@@ -28,7 +30,6 @@ export default function SaayraPage() {
         <SunshineThings />
         <FeedSunshine />
 
-        {/* Personal 20-Photo Stackable Gallery */}
         <PersonalGallery
           initialDeck={saayraGallery}
           title="Twenty Frames of Sunshine"
@@ -39,8 +40,8 @@ export default function SaayraPage() {
         />
 
         <SaayraThankYouWall />
-        <SunshinePoem />
         <SunshineRoastRoom />
+        <SunshinePoem />
         <SaayraLetter />
       </div>
     </PageTransition>

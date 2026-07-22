@@ -18,11 +18,13 @@ import ProzacDaisyCard from "../components/aparna/ProzacDaisyCard";
 import AparnaThankYouWall from "../components/aparna/AparnaThankYouWall";
 import AparnaLetter from "../components/aparna/AparnaLetter";
 import DaisyJokeGarden from "../components/aparna/DaisyJokeGarden";
+import "../styles/aparna.css";
+import "../styles/stackable-gallery.css";
 
 export default function AparnaPage() {
   return (
     <PageTransition>
-      <div className="aparna-page">
+      <div className="daisy-page">
         <DaisyHero />
         <AllenStory />
         <CollegeFormStory />
@@ -35,8 +37,7 @@ export default function AparnaPage() {
         <AdviceDrawerSection />
         <CollegeConstantSection />
         <ThingsToRememberSection />
-        
-        {/* Personal 20-Photo Stackable Gallery */}
+
         <PersonalGallery
           initialDeck={aparnaGallery}
           title="Twenty Little Frames of My Daisy"

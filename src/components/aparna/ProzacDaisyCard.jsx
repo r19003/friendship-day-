@@ -5,20 +5,35 @@ import { prozacCardData } from "../../data/aparnaData";
 import { fadeUp, viewportOnce } from "../../lib/motionVariants";
 
 export default function ProzacDaisyCard() {
-  const [dosed, setDosed] = useState(false);
-  const [meterProgress, setMeterProgress] = useState(0);
-  const [floatingDaisies, setFloatingDaisies] = useState([]);
+  const [effectiveness, setEffectiveness] = useState(0);
+  const [doseState, setDoseState] = useState("idle"); // 'idle' | 'taking' | 'completed'
 
-  function handleDose() {
-    setDosed(true);
-    setMeterProgress(73);
-    setFloatingDaisies(Array.from({ length: 8 }, (_, i) => ({ id: Date.now() + i, left: `${20 + Math.random() * 60}%` })));
-    setTimeout(() => setFloatingDaisies([]), 2500);
+  const handleTakeDose = () => {
+    if (doseState !== "idle") return;
+    setDoseState("taking");
+    setEffectiveness(0);
+
+    // 0% -> 24% (450ms)
     setTimeout(() => {
-      setDosed(false);
-      setMeterProgress(0);
-    }, 5000);
-  }
+      setEffectiveness(24);
+    }, 450);
+
+    // 24% -> 48% (450ms)
+    setTimeout(() => {
+      setEffectiveness(48);
+    }, 900);
+
+    // 48% -> 73% (650ms)
+    setTimeout(() => {
+      setEffectiveness(73);
+      setDoseState("completed");
+    }, 1550);
+  };
+
+  const handleReset = () => {
+    setEffectiveness(0);
+    setDoseState("idle");
+  };
 
   const rows = [
     { label: "Name", value: prozacCardData.name },
@@ -31,64 +46,88 @@ export default function ProzacDaisyCard() {
   ];
 
   return (
-    <section className="prozac-section page-grain">
+    <section className="prozac-section daisy-section page-grain" id="prozac-daisy">
       <div className="content-container">
         <SectionHeading label="Prescription" title="My Prozac Daisy" center dividerColor="var(--daisy-yellow)" />
-        
+
         <motion.div
           className="prozac-card"
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
-          style={{ position: "relative" }}
         >
-          {/* Friendship-use only label */}
           <span className="prozac-label-tag">Friendship-use only 🌼</span>
 
-          {/* Header */}
           <div className="prozac-card-top">
-            <div className="daisy-seal-icon" title="Daisy Seal">🌼</div>
+            <div className="daisy-seal-icon" title="Daisy Seal" aria-hidden="true">🌼</div>
             <div style={{ textAlign: "left" }}>
-              <div style={{ fontWeight: 800, fontSize: "1.2rem", letterSpacing: "-0.02em" }}>PROZAC DAISY™</div>
-              <div style={{ fontSize: "0.78rem", opacity: 0.65, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                Happiness in human form · Rx #2022-2025
+              <div className="prozac-brand-title">PROZAC DAISY™</div>
+              <div className="prozac-brand-sub">Happiness in human form · Rx #2022-2025</div>
+            </div>
+          </div>
+
+          <dl className="prozac-rows-list">
+            {rows.map((row, i) => (
+              <div key={i} className="prozac-row">
+                <dt className="prozac-field-name">{row.label}</dt>
+                <dd className="prozac-field-val">{row.value}</dd>
+              </div>
+            ))}
+          </dl>
+
+          <div className="prozac-dose-animation">
+            <div className={`friendship-capsule ${doseState === "taking" ? "is-taking" : ""}`}>
+              <span>🌼</span>
+            </div>
+
+            <div className="prozac-meter">
+              <div className="prozac-meter__header">
+                <span>Dosage effectiveness</span>
+                <strong>{effectiveness}%</strong>
+              </div>
+
+              <div
+                className="prozac-meter__track"
+                role="progressbar"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow={effectiveness}
+              >
+                <div
+                  className="prozac-meter__fill"
+                  style={{ width: `${effectiveness}%` }}
+                />
+
+                <div className={`prozac-meter__flower ${effectiveness >= 73 ? "is-bloomed" : ""}`}>
+                  🌼
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Rows */}
-          {rows.map((row, i) => (
-            <div key={i} className="prozac-row">
-              <span className="prozac-field-name">{row.label}</span>
-              <span className="prozac-field-val">{row.value}</span>
-            </div>
-          ))}
+          <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
+            {doseState === "idle" && (
+              <button className="prozac-dose-btn" onClick={handleTakeDose}>
+                💊 Take One Dose
+              </button>
+            )}
 
-          {/* Dosage meter bar */}
-          <div className="dosage-meter-wrapper" style={{ margin: "1.25rem 0 0.5rem" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", fontWeight: 800, color: "var(--daisy-muted)", marginBottom: "0.3rem" }}>
-              <span>DOSAGE EFFECTIVENESS METER</span>
-              <span>{meterProgress}%</span>
-            </div>
-            <div className="dosage-meter-track" style={{ height: "8px", background: "rgba(0,0,0,0.06)", borderRadius: "4px", overflow: "hidden" }}>
-              <motion.div
-                className="dosage-meter-fill"
-                animate={{ width: `${meterProgress}%` }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                style={{ height: "100%", background: "linear-gradient(90deg, var(--daisy-blue-dark), var(--daisy-yellow))" }}
-              />
-            </div>
+            {doseState === "taking" && (
+              <button className="prozac-dose-btn" disabled style={{ opacity: 0.85 }}>
+                ⏳ Absorbing Daisy Warmth... ({effectiveness}%)
+              </button>
+            )}
+
+            {doseState === "completed" && (
+              <button className="prozac-dose-btn prozac-dose-btn--reset" onClick={handleReset}>
+                🔄 Take Another Dose Tomorrow
+              </button>
+            )}
           </div>
 
-          {/* Dosage button */}
-          <button className="prozac-dose-btn" onClick={handleDose} disabled={dosed}>
-            {dosed ? "✓ Dose received!" : "💊 Take One Dose"}
-          </button>
-
-          {/* Result Banner */}
           <AnimatePresence>
-            {dosed && (
+            {doseState === "completed" && (
               <motion.div
                 className="prozac-result"
                 initial={{ opacity: 0, y: 10 }}
@@ -96,27 +135,15 @@ export default function ProzacDaisyCard() {
                 exit={{ opacity: 0 }}
                 role="status"
               >
-                Dose received. The day now feels warmer, safer, and approximately 73% happier. 🌼
+                <div className="prozac-result-text">
+                  Dose received. The day now feels warmer, safer, and approximately 73% happier. 🌼
+                </div>
+                <div className="prozac-status-badge">
+                  Active effect: Aparna warmth detected.
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
-
-          {floatingDaisies.map((d) => (
-            <span
-              key={d.id}
-              aria-hidden="true"
-              style={{
-                position: "absolute",
-                left: d.left,
-                bottom: "60px",
-                fontSize: "1.5rem",
-                animation: "daisyFloat 1.8s ease-out forwards",
-                pointerEvents: "none",
-              }}
-            >
-              🌼
-            </span>
-          ))}
         </motion.div>
       </div>
     </section>

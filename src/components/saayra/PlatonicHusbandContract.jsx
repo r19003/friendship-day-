@@ -1,69 +1,151 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import SectionHeading from "../common/SectionHeading";
-import { platonicContractData } from "../../data/saayraData";
 import confetti from "canvas-confetti";
 
 export default function PlatonicHusbandContract() {
-  const [stamped, setStamped] = useState(false);
-  const [result, setResult] = useState(false);
+  const [isContractAccepted, setIsContractAccepted] = useState(() => {
+    return localStorage.getItem("saayra-platonic-contract-accepted") === "true";
+  });
 
-  function handleRenew() {
-    setStamped(true);
-    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ["#7954a1", "#cdb5e8", "#f4c561", "#eee3fa"] });
-    setResult(true);
-    setTimeout(() => setStamped(false), 600);
-    setTimeout(() => setResult(false), 5000);
+  function launchContractConfetti() {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    const end = Date.now() + 900;
+    const colors = ["#f2c45f", "#b486cf", "#fff0b5", "#795096", "#f0bfd3"];
+
+    function frame() {
+      confetti({
+        particleCount: 4,
+        angle: 60,
+        spread: 52,
+        startVelocity: 34,
+        origin: { x: 0, y: 0.72 },
+        colors,
+        scalar: 0.85,
+      });
+
+      confetti({
+        particleCount: 4,
+        angle: 120,
+        spread: 52,
+        startVelocity: 34,
+        origin: { x: 1, y: 0.72 },
+        colors,
+        scalar: 0.85,
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    }
+
+    frame();
+  }
+
+  function handleContractAgreement() {
+    if (isContractAccepted) return;
+    setIsContractAccepted(true);
+    localStorage.setItem("saayra-platonic-contract-accepted", "true");
+    launchContractConfetti();
   }
 
   return (
-    <section className="contract-section">
-      <div className="reading-container">
-        <SectionHeading label="Official Document" title="Official Platonic Husband Contract" center dividerColor="var(--sunshine-gold)" />
-        <motion.div className="contract-doc" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <div className="contract-ornament-top">
-            <div className="contract-ornament-line" />
-            <span className="contract-ornament-star">✦</span>
-            <span className="contract-ornament-star">✦</span>
-            <span className="contract-ornament-star">✦</span>
-            <div className="contract-ornament-line" />
+    <section id="platonic-contract" className="sunshine-section platonic-contract-section">
+      <div className="sunshine-section__inner">
+        <article className={`platonic-contract ${isContractAccepted ? "is-accepted" : ""}`}>
+          <div className="platonic-contract__ornament" aria-hidden="true">
+            <span>✦</span>
+            <span>✦</span>
+            <span>✦</span>
           </div>
-          <h3 className="contract-title">Platonic Husband Contract</h3>
-          <p className="contract-subtitle">{platonicContractData.subtitle}</p>
-          <p style={{ fontSize: "0.93rem", color: "var(--sunshine-text)", marginBottom: "0.5rem" }}>
-            {platonicContractData.party1} is permanently appointed as {platonicContractData.party2}'s platonic husband.
+
+          <p className="platonic-contract__kicker">
+            Official Friendship Document
           </p>
-          <p className="contract-section-heading">Responsibilities</p>
-          <ul className="contract-list" role="list">
-            {platonicContractData.responsibilities.map((r, i) => <li key={i} className="contract-item">{r}</li>)}
-          </ul>
-          <p className="contract-section-heading">Vows</p>
-          {platonicContractData.vows.map((vow, i) => <blockquote key={i} className="contract-vow">"{vow}"</blockquote>)}
-          <div className="contract-signature-row">
-            <div className="contract-sig-line">Saayra<br /><span style={{ fontFamily: "var(--font-handwritten)", fontSize: "1.3rem", opacity: 0.7 }}>Saayra ✦</span></div>
-            <div className="contract-sig-line">Raina<br /><span style={{ fontFamily: "var(--font-handwritten)", fontSize: "1.3rem", opacity: 0.7 }}>Raina ✦</span></div>
+
+          <h2 className="platonic-contract__title">
+            Platonic Husband Contract
+          </h2>
+
+          <p className="platonic-contract__date">
+            Executed on 21 August 2023 · Valid for Eternity
+          </p>
+
+          <div className="platonic-contract__divider" />
+
+          <p className="platonic-contract__statement">
+            Saayra is permanently appointed as Raina’s platonic husband, trusted listener, food companion, roasting partner, and one of the safest people in her life.
+          </p>
+
+          <section className="platonic-contract__terms">
+            <h3>Terms and Responsibilities</h3>
+
+            <ol className="platonic-contract__articles">
+              <li>
+                Listen to emotional rants, life updates, and thoughts that arrive without proper structure.
+              </li>
+              <li>
+                Accept that ramen is a completely valid response to stressful situations.
+              </li>
+              <li>
+                Provide support during BTS announcements, comebacks, live viewings, and emotional emergencies.
+              </li>
+              <li>
+                Continue friendly roasting while knowing when genuine comfort is needed.
+              </li>
+              <li>
+                Celebrate Raina’s happiness as though it belongs to both of them.
+              </li>
+              <li>
+                Remain present through college, work, changing routines, distance, and every future phase.
+              </li>
+            </ol>
+          </section>
+
+          <div className="platonic-contract__signatures">
+            <div className="contract-signature contract-signature--raina">
+              <span>Appointed by</span>
+              <strong>Raina</strong>
+              <div className="contract-signature__line" />
+            </div>
+
+            <div className="contract-signature contract-signature--saayra">
+              <span>Accepted by</span>
+              <strong>Saayra</strong>
+              <div className="contract-signature__line" />
+            </div>
           </div>
-          <button className={`contract-seal${stamped ? " stamped" : ""}`} onClick={handleRenew} aria-label="Stamp the seal">
-            <span className="contract-seal-emoji">💜</span>
-            <span className="contract-seal-text">Valid<br />Forever</span>
-          </button>
-          <div className="contract-ornament-bottom" style={{ marginTop: "1.5rem" }}>
-            <div className="contract-ornament-line" />
-            <span className="contract-ornament-star">✦</span>
-            <div className="contract-ornament-line" />
+
+          <div
+            className={`platonic-contract__seal ${
+              isContractAccepted ? "is-stamped" : ""
+            }`}
+            aria-hidden="true"
+          >
+            Valid Forever
           </div>
-          <div className="contract-btns">
-            <button className="contract-btn-renew" onClick={handleRenew}>💜 Renew Contract</button>
-            <button className="contract-btn-renew" onClick={handleRenew} style={{ background: "var(--sunshine-gold)", color: "#2a1a00" }}>✨ Add Another Lifetime</button>
+
+          <div className="platonic-contract__actions">
+            <button
+              type="button"
+              className={`contract-agree-button ${
+                isContractAccepted ? "is-accepted" : ""
+              }`}
+              onClick={handleContractAgreement}
+              disabled={isContractAccepted}
+            >
+              {isContractAccepted
+                ? "Contract Signed Forever"
+                : "Agree & Sign the Contract"}
+            </button>
           </div>
-          <AnimatePresence>
-            {result && (
-              <motion.div className="contract-result" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} role="status">
-                {platonicContractData.renewResult}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
+
+          <p className="platonic-contract__result" aria-live="polite">
+            {isContractAccepted
+              ? "Contract accepted. Cancellation remains permanently unavailable."
+              : "Awaiting official agreement."}
+          </p>
+        </article>
       </div>
     </section>
   );

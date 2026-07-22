@@ -4,31 +4,68 @@ import SectionHeading from "../common/SectionHeading";
 import { sunshineRays, sunshineFinalLine } from "../../data/saayraData";
 
 export default function SunshineRays() {
-  const [openRay, setOpenRay] = useState(null);
+  const [activeRayId, setActiveRayId] = useState(sunshineRays[0]?.id || null);
+
+  const activeRay = sunshineRays.find((r) => r.id === activeRayId) || sunshineRays[0];
+
   return (
-    <section className="rays-section">
+    <section className="rays-section sunshine-section">
       <div className="content-container">
-        <SectionHeading label="Why You Are Sunshine" title="You Lift My Mood in Two Minutes" dividerColor="var(--sunshine-gold)" />
-        <div className="sunshine-rays-accordion" role="list">
-          {sunshineRays.map((ray, i) => (
-            <motion.div key={ray.id} className="ray-item" role="listitem" initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-              <button className="ray-btn" onClick={() => setOpenRay(openRay === ray.id ? null : ray.id)} aria-expanded={openRay === ray.id}>
-                <span className="ray-icon" aria-hidden="true">{ray.emoji}</span>
-                <span>{ray.title}</span>
-                <span style={{ marginLeft: "auto", opacity: 0.5 }}>{openRay === ray.id ? "▲" : "▼"}</span>
-              </button>
-              <AnimatePresence>
-                {openRay === ray.id && (
-                  <motion.div className="ray-content" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.35 }}>
-                    <p style={{ margin: 0, fontStyle: "italic", marginBottom: "0.4rem", opacity: 0.75 }}>"{ray.desc}"</p>
-                    <p style={{ margin: 0 }}>{ray.full}</p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+        <SectionHeading
+          label="Why You Are Sunshine"
+          title="You Lift My Mood in Two Minutes"
+          center
+          dividerColor="var(--sunshine-gold)"
+        />
+
+        <div className="sunshine-rays-wrapper">
+          {/* Central Sun */}
+          <div className="central-sun-hub">
+            <div className="central-sun-core">☀️</div>
+            <div className="central-sun-title">5 Rays of Saayra</div>
+          </div>
+
+          {/* 5 Rays Grid / Dial */}
+          <div className="sunshine-rays-grid" role="tablist" aria-label="5 Rays of Sunshine">
+            {sunshineRays.map((ray) => {
+              const isActive = activeRayId === ray.id;
+              return (
+                <button
+                  key={ray.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  className={`sunshine-ray ${isActive ? "is-active" : ""}`}
+                  onClick={() => setActiveRayId(ray.id)}
+                >
+                  <span className="sunshine-ray-emoji" aria-hidden="true">{ray.emoji}</span>
+                  <span className="sunshine-ray-title">{ray.title}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Connected Description Card */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeRay.id}
+              className="sunshine-ray-card"
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -14 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="ray-card-header">
+                <span className="ray-card-emoji">{activeRay.emoji}</span>
+                <h3 className="ray-card-title">{activeRay.title}</h3>
+              </div>
+              <p className="ray-card-quote">"{activeRay.desc}"</p>
+              <p className="ray-card-body">{activeRay.full}</p>
             </motion.div>
-          ))}
+          </AnimatePresence>
+
+          <p className="ray-final-line">{sunshineFinalLine}</p>
         </div>
-        <motion.p className="ray-final" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>{sunshineFinalLine}</motion.p>
       </div>
     </section>
   );

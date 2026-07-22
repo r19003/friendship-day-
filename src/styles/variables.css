@@ -15,6 +15,10 @@
   --page-width: 1240px;
   --reading-width: 760px;
 
+  --navigation-height: 76px;
+  --navigation-gap: 28px;
+  --section-anchor-offset: calc(var(--navigation-height) + var(--navigation-gap));
+
   --section-space: clamp(5rem, 8vw, 8rem);
   --space-section: clamp(5rem, 8vw, 8rem);
   --section-space-desktop: clamp(5rem, 8vw, 8rem);
@@ -34,8 +38,8 @@
 
   /* ── Z-Index System ── */
   --z-background: 0;
-  --z-decoration: 5;
-  --z-content: 10;
+  --z-decoration: 1;
+  --z-content: 5;
   --z-floating: 50;
   --z-navigation: 100;
   --z-modal: 1000;

@@ -98,13 +98,32 @@ img { max-width: 100%; display: block; }
 }
 
 /* ── Section base ── */
-section {
+section[id] {
+  scroll-margin-top: var(--section-anchor-offset);
+}
+
+.daisy-section,
+.sunshine-section,
+.chaos-section {
+  position: relative;
+  padding-block: clamp(5rem, 8vw, 8rem);
+  padding-top: clamp(5.5rem, 8vw, 8rem);
+}
+
+.page-first-section {
+  padding-top: calc(var(--navigation-height) + clamp(4.5rem, 7vw, 7rem));
+}
+
+main > section,
+.page-shell > section {
   position: relative;
   padding-block: var(--space-section);
 }
 
 /* ── Typography — Display & Headings ── */
-h1, h2, h3 {
+.page-shell h1,
+.page-shell h2,
+.page-shell h3 {
   font-family: var(--font-display);
   line-height: 1.05;
   letter-spacing: -0.03em;
