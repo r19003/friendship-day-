@@ -1,6 +1,7 @@
 -- ============================================================
 -- FRIENDSHIP DAY APP - COMPLETE DATABASE SCHEMA MIGRATION
 -- Project: Daisy, Sunshine & Me (AMI Trio)
+-- Pure Standard SQL (Compatible with all Supabase Editors)
 -- ============================================================
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
@@ -221,82 +222,62 @@ CREATE TABLE IF NOT EXISTS public.media_caption_suggestions (
 );
 
 -- ============================================================
--- ROW LEVEL SECURITY (RLS) POLICIES
--- Enable RLS & Permissive Access for Public/Anon Frontend
+-- ROW LEVEL SECURITY (RLS) & PUBLIC ACCESS POLICIES
 -- ============================================================
 
-DO $$
-DECLARE
-  tbl TEXT;
-  tables TEXT[] := ARRAY[
-    'chat_messages', 'chat_message_reads', 'jokes', 'roasts',
-    'message_wall', 'bucket_list_items', 'media_items', 'media_comments',
-    'activity_feed', 'mood_checkins', 'memory_capsules', 'song_recommendations',
-    'polls', 'poll_options', 'poll_votes', 'user_view_state', 'media_caption_suggestions'
-  ];
-BEGIN
-  FOREACH tbl IN ARRAY tables LOOP
-    EXECUTE format('ALTER TABLE public.%I ENABLE ROW LEVEL SECURITY;', tbl);
-    
-    EXECUTE format('DROP POLICY IF EXISTS %I ON public.%I;', 'public_select_policy_' || tbl, tbl);
-    EXECUTE format('CREATE POLICY %I ON public.%I FOR SELECT USING (true);', 'public_select_policy_' || tbl, tbl);
-    
-    EXECUTE format('DROP POLICY IF EXISTS %I ON public.%I;', 'public_insert_policy_' || tbl, tbl);
-    EXECUTE format('CREATE POLICY %I ON public.%I FOR INSERT WITH CHECK (true);', 'public_insert_policy_' || tbl, tbl);
-    
-    EXECUTE format('DROP POLICY IF EXISTS %I ON public.%I;', 'public_update_policy_' || tbl, tbl);
-    EXECUTE format('CREATE POLICY %I ON public.%I FOR UPDATE USING (true);', 'public_update_policy_' || tbl, tbl);
-    
-    EXECUTE format('DROP POLICY IF EXISTS %I ON public.%I;', 'public_delete_policy_' || tbl, tbl);
-    EXECUTE format('CREATE POLICY %I ON public.%I FOR DELETE USING (true);', 'public_delete_policy_' || tbl, tbl);
-  END LOOP;
-END $$;
+ALTER TABLE public.chat_messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.chat_message_reads ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.jokes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.roasts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.message_wall ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.bucket_list_items ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.media_items ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.media_comments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.activity_feed ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.mood_checkins ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.memory_capsules ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.song_recommendations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.polls ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.poll_options ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.poll_votes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_view_state ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.media_caption_suggestions ENABLE ROW LEVEL SECURITY;
+
+-- Allow public/anon access for all operations
+CREATE POLICY "allow_all_chat_messages" ON public.chat_messages FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_chat_message_reads" ON public.chat_message_reads FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_jokes" ON public.jokes FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_roasts" ON public.roasts FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_message_wall" ON public.message_wall FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_bucket_list_items" ON public.bucket_list_items FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_media_items" ON public.media_items FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_media_comments" ON public.media_comments FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_activity_feed" ON public.activity_feed FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_mood_checkins" ON public.mood_checkins FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_memory_capsules" ON public.memory_capsules FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_song_recommendations" ON public.song_recommendations FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_polls" ON public.polls FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_poll_options" ON public.poll_options FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_poll_votes" ON public.poll_votes FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_user_view_state" ON public.user_view_state FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "allow_all_media_caption_suggestions" ON public.media_caption_suggestions FOR ALL USING (true) WITH CHECK (true);
 
 -- ============================================================
 -- SUPABASE REALTIME PUBLICATION
 -- ============================================================
 
-DO $$
-BEGIN
-  BEGIN
-    ALTER PUBLICATION supabase_realtime ADD TABLE public.chat_messages;
-  EXCEPTION WHEN OTHERS THEN NULL; END;
-  BEGIN
-    ALTER PUBLICATION supabase_realtime ADD TABLE public.jokes;
-  EXCEPTION WHEN OTHERS THEN NULL; END;
-  BEGIN
-    ALTER PUBLICATION supabase_realtime ADD TABLE public.roasts;
-  EXCEPTION WHEN OTHERS THEN NULL; END;
-  BEGIN
-    ALTER PUBLICATION supabase_realtime ADD TABLE public.message_wall;
-  EXCEPTION WHEN OTHERS THEN NULL; END;
-  BEGIN
-    ALTER PUBLICATION supabase_realtime ADD TABLE public.bucket_list_items;
-  EXCEPTION WHEN OTHERS THEN NULL; END;
-  BEGIN
-    ALTER PUBLICATION supabase_realtime ADD TABLE public.media_items;
-  EXCEPTION WHEN OTHERS THEN NULL; END;
-  BEGIN
-    ALTER PUBLICATION supabase_realtime ADD TABLE public.media_comments;
-  EXCEPTION WHEN OTHERS THEN NULL; END;
-  BEGIN
-    ALTER PUBLICATION supabase_realtime ADD TABLE public.activity_feed;
-  EXCEPTION WHEN OTHERS THEN NULL; END;
-  BEGIN
-    ALTER PUBLICATION supabase_realtime ADD TABLE public.mood_checkins;
-  EXCEPTION WHEN OTHERS THEN NULL; END;
-  BEGIN
-    ALTER PUBLICATION supabase_realtime ADD TABLE public.memory_capsules;
-  EXCEPTION WHEN OTHERS THEN NULL; END;
-  BEGIN
-    ALTER PUBLICATION supabase_realtime ADD TABLE public.song_recommendations;
-  EXCEPTION WHEN OTHERS THEN NULL; END;
-  BEGIN
-    ALTER PUBLICATION supabase_realtime ADD TABLE public.polls;
-  EXCEPTION WHEN OTHERS THEN NULL; END;
-  BEGIN
-    ALTER PUBLICATION supabase_realtime ADD TABLE public.chat_message_reads;
-  EXCEPTION WHEN OTHERS THEN NULL; END;
-END $$;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.chat_messages;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.jokes;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.roasts;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.message_wall;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.bucket_list_items;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.media_items;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.media_comments;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.activity_feed;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.mood_checkins;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.memory_capsules;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.song_recommendations;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.polls;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.chat_message_reads;
 
 NOTIFY pgrst, 'reload schema';
