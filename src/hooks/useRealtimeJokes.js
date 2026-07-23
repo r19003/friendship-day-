@@ -3,10 +3,11 @@ import { supabase, isSupabaseConfigured } from "../lib/supabase";
 
 export function useRealtimeJokes(tableName, onInsert, onUpdate, onDelete) {
   useEffect(() => {
-    if (!isSupabaseConfigured || !supabase) return;
+    if (!isSupabaseConfigured || !supabase || !tableName) return;
 
+    const channelName = `rt-jokes-${tableName}-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const channel = supabase
-      .channel(`realtime-${tableName}`)
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: tableName },

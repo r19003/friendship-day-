@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRealtime } from "../components/realtime/RealtimeProvider";
+import { isMissingTableError } from "../lib/supabase";
 import { logActivity } from "../lib/activityLogger";
 
 const SEED_CAPSULES = [];
@@ -23,13 +24,20 @@ export function useMemoryCapsules() {
       .select("*")
       .order("unlock_at", { ascending: true })
       .then(({ data, error }) => {
-        if (!error && data) {
+        if (error) {
+          if (isMissingTableError(error)) {
+            console.warn("Table memory_capsules is missing or loading. Operating safely.");
+          }
+          return;
+        }
+        if (data) {
           setCapsules(data);
         }
       });
 
+    const channelName = `rt-capsules-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const channel = supabase
-      .channel("realtime:capsules")
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "memory_capsules" },

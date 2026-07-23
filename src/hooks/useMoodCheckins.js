@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRealtime } from "../components/realtime/RealtimeProvider";
+import { isMissingTableError } from "../lib/supabase";
 
 const DEFAULT_MOODS = {};
 
@@ -22,7 +23,13 @@ export function useMoodCheckins() {
       .select("*")
       .eq("is_current", true)
       .then(({ data, error }) => {
-        if (!error && data) {
+        if (error) {
+          if (isMissingTableError(error)) {
+            console.warn("Table mood_checkins is missing or loading. Operating safely.");
+          }
+          return;
+        }
+        if (data) {
           const map = {};
           data.forEach((row) => {
             map[row.author_name] = row;
@@ -31,8 +38,9 @@ export function useMoodCheckins() {
         }
       });
 
+    const channelName = `rt-moods-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const channel = supabase
-      .channel("realtime:moods")
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "mood_checkins" },

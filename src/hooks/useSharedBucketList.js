@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRealtime } from "../components/realtime/RealtimeProvider";
-import { CHANNELS } from "../lib/realtimeChannels";
+import { isMissingTableError } from "../lib/supabase";
 
 export function useSharedBucketList() {
   const { supabase, isConfigured, userRole, sessionId } = useRealtime();
@@ -22,13 +22,20 @@ export function useSharedBucketList() {
       .select("*")
       .order("created_at", { ascending: true })
       .then(({ data, error }) => {
-        if (!error && data) {
+        if (error) {
+          if (isMissingTableError(error)) {
+            console.warn("Table bucket_list_items is missing or loading. Operating safely.");
+          }
+          return;
+        }
+        if (data) {
           setItems(data);
         }
       });
 
+    const channelName = `rt-bucket-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const channel = supabase
-      .channel(CHANNELS.BUCKET)
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "bucket_list_items" },

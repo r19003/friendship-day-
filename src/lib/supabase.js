@@ -24,6 +24,17 @@ export const supabase = isSupabaseConfigured
     })
   : null;
 
+// Helper to identify missing database table / schema errors
+export function isMissingTableError(error) {
+  if (!error) return false;
+  return (
+    error.code === "PGRST205" ||
+    error.code === "42P01" ||
+    /could not find the table/i.test(error.message || "") ||
+    /relation .* does not exist/i.test(error.message || "")
+  );
+}
+
 // Persistent unique device session ID
 export function getOrCreateSessionId() {
   const STORAGE_KEY = "ami_device_session_id";

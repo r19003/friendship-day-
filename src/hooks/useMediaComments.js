@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useRealtime } from "../components/realtime/RealtimeProvider";
+import { isMissingTableError } from "../lib/supabase";
 import { validateMessageLength } from "../lib/messageValidation";
 
 export function useMediaComments(mediaId) {
   const { supabase, isConfigured, userRole, sessionId } = useRealtime();
   const [comments, setComments] = useState([]);
-  const [reactions, setReactions] = useState({});
 
   useEffect(() => {
     if (!mediaId) return;
@@ -24,14 +24,21 @@ export function useMediaComments(mediaId) {
       .eq("media_id", mediaId)
       .order("created_at", { ascending: true })
       .then(({ data, error }) => {
-        if (!error && data) {
+        if (error) {
+          if (isMissingTableError(error)) {
+            console.warn("Table media_comments is missing or loading. Operating safely.");
+          }
+          return;
+        }
+        if (data) {
           setComments(data);
           localStorage.setItem(storageKey, JSON.stringify(data));
         }
       });
 
+    const channelName = `rt-comments-${mediaId}-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const channel = supabase
-      .channel(`realtime:comments:${mediaId}`)
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "media_comments", filter: `media_id=eq.${mediaId}` },

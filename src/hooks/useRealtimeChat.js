@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRealtime } from "../components/realtime/RealtimeProvider";
-import { CHANNELS } from "../lib/realtimeChannels";
+import { isMissingTableError } from "../lib/supabase";
 import { validateMessageLength } from "../lib/messageValidation";
 
 const INITIAL_LOCAL_MESSAGES = [];
@@ -28,22 +28,36 @@ export function useRealtimeChat() {
       .order("created_at", { ascending: true })
       .limit(50)
       .then(({ data, error }) => {
-        if (!error && data) {
+        if (error) {
+          if (isMissingTableError(error)) {
+            console.warn("Table chat_messages is missing or loading. Operating safely.");
+          }
+          return;
+        }
+        if (data) {
           setMessages(data);
         }
       });
 
-    // Realtime channel
+    // Realtime channel with unique instance identifier to prevent topic collision
+    const channelName = `rt-chat-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const channel = supabase
-      .channel(CHANNELS.CHAT)
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "chat_messages" },
         (payload) => {
           setMessages((prev) => {
             if (prev.some((m) => m.id === payload.new.id)) return prev;
-            return [...prev, payload.new];
+            return [...prev, payload.new].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
           });
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "chat_messages" },
+        (payload) => {
+          setMessages((prev) => prev.map((m) => (m.id === payload.new.id ? payload.new : m)));
         }
       )
       .on(
@@ -89,7 +103,7 @@ export function useRealtimeChat() {
           reply_to_id: replyingTo ? replyingTo.id : null,
         }]);
       } catch (err) {
-        console.warn("Chat insert failed, operating in local mode:", err);
+        console.warn("Chat insert fallback:", err);
       }
     }
 

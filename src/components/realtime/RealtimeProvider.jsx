@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 import { supabase, isSupabaseConfigured, getOrCreateSessionId } from "../../lib/supabase";
-import { ROOM_ID, CHANNELS } from "../../lib/realtimeChannels";
+import { ROOM_ID } from "../../lib/realtimeChannels";
 
 const RealtimeContext = createContext(null);
 
@@ -16,6 +16,7 @@ export function RealtimeProvider({ children }) {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [typingUsers, setTypingUsers] = useState({});
   const [sessionId] = useState(getOrCreateSessionId);
+  const presenceChannelRef = useRef(null);
 
   // Sync user role to localStorage
   const changeRole = (role) => {
@@ -33,9 +34,11 @@ export function RealtimeProvider({ children }) {
     let presenceChannel;
 
     try {
-      presenceChannel = supabase.channel(CHANNELS.PRESENCE, {
+      const channelName = `presence-${sessionId}-${Date.now()}`;
+      presenceChannel = supabase.channel(channelName, {
         config: { presence: { key: sessionId } },
       });
+      presenceChannelRef.current = presenceChannel;
 
       presenceChannel
         .on("presence", { event: "sync" }, () => {
@@ -77,6 +80,7 @@ export function RealtimeProvider({ children }) {
 
     return () => {
       if (presenceChannel) {
+        presenceChannelRef.current = null;
         supabase.removeChannel(presenceChannel);
       }
     };
@@ -102,12 +106,11 @@ export function RealtimeProvider({ children }) {
     return () => clearInterval(interval);
   }, []);
 
-  // Broadcast typing event
+  // Broadcast typing event safely on subscribed channel ref
   const sendTyping = () => {
-    if (!isSupabaseConfigured || !supabase) return;
+    if (!isSupabaseConfigured || !supabase || !presenceChannelRef.current) return;
     try {
-      const channel = supabase.channel(CHANNELS.PRESENCE);
-      channel.send({
+      presenceChannelRef.current.send({
         type: "broadcast",
         event: "typing",
         payload: { userRole },

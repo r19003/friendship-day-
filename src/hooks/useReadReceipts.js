@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRealtime } from "../components/realtime/RealtimeProvider";
+import { isMissingTableError } from "../lib/supabase";
 
 export function useReadReceipts(messageId, messageAuthor) {
   const { supabase, isConfigured, userRole, sessionId } = useRealtime();
@@ -14,14 +15,21 @@ export function useReadReceipts(messageId, messageAuthor) {
       .select("reader_name")
       .eq("message_id", messageId)
       .then(({ data, error }) => {
-        if (!error && data) {
+        if (error) {
+          if (isMissingTableError(error)) {
+            console.warn("Table chat_message_reads is missing or loading. Operating safely.");
+          }
+          return;
+        }
+        if (data) {
           setReaders(data.map((r) => r.reader_name));
         }
       });
 
     // Realtime channel
+    const channelName = `rt-reads-${messageId}-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const channel = supabase
-      .channel(`realtime:reads:${messageId}`)
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "chat_message_reads", filter: `message_id=eq.${messageId}` },

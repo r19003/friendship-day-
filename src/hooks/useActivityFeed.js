@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRealtime } from "../components/realtime/RealtimeProvider";
+import { isMissingTableError } from "../lib/supabase";
 
 const SEED_ACTIVITIES = [];
 
@@ -19,14 +20,21 @@ export function useActivityFeed() {
       .order("created_at", { ascending: false })
       .limit(20)
       .then(({ data, error }) => {
-        if (!error && data) {
+        if (error) {
+          if (isMissingTableError(error)) {
+            console.warn("Table activity_feed is missing or loading. Operating safely.");
+          }
+          return;
+        }
+        if (data) {
           setActivities(data);
           localStorage.setItem("ami_local_activities", JSON.stringify(data));
         }
       });
 
+    const channelName = `rt-activity-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const channel = supabase
-      .channel("realtime:activity_feed")
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "activity_feed" },

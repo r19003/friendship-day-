@@ -57,8 +57,8 @@ class AmbientSynth {
 
         osc.start(now + idx * 0.22);
         osc.stop(now + idx * 0.22 + 2.3);
-      } catch (e) {
-        // Safe catch for closed audio contexts
+      } catch {
+        // Safe catch
       }
     });
 
@@ -76,22 +76,13 @@ export function useMusicPlayer(src = "/audio/friendship-background.mp3") {
   const [useSynthFallback, setUseSynthFallback] = useState(false);
 
   useEffect(() => {
-    if (!src) return;
-    const audio = new Audio(src);
-    audio.loop = true;
-    audio.volume = 0.4;
-    
-    audio.addEventListener("error", () => {
-      setUseSynthFallback(true);
-    });
-
-    audioRef.current = audio;
-
     return () => {
-      audio.pause();
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
       synthInstance.stop();
     };
-  }, [src]);
+  }, []);
 
   const toggle = useCallback(() => {
     if (playing) {
@@ -105,7 +96,21 @@ export function useMusicPlayer(src = "/audio/friendship-background.mp3") {
       if (useSynthFallback) {
         synthInstance.play();
         setPlaying(true);
-      } else if (audioRef.current) {
+        return;
+      }
+
+      if (!audioRef.current && src) {
+        const audio = new Audio(src);
+        audio.loop = true;
+        audio.volume = 0.4;
+        audio.addEventListener("error", () => {
+          setUseSynthFallback(true);
+          synthInstance.play();
+        });
+        audioRef.current = audio;
+      }
+
+      if (audioRef.current) {
         audioRef.current
           .play()
           .then(() => {
@@ -117,9 +122,13 @@ export function useMusicPlayer(src = "/audio/friendship-background.mp3") {
             synthInstance.play();
             setPlaying(true);
           });
+      } else {
+        setUseSynthFallback(true);
+        synthInstance.play();
+        setPlaying(true);
       }
     }
-  }, [playing, useSynthFallback]);
+  }, [playing, useSynthFallback, src]);
 
   return { playing, toggle };
 }

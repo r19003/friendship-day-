@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRealtime } from "../components/realtime/RealtimeProvider";
-import { CHANNELS } from "../lib/realtimeChannels";
+import { isMissingTableError } from "../lib/supabase";
 
 const INITIAL_WALL_NOTES = [];
 
@@ -24,13 +24,20 @@ export function useMessageWall() {
       .select("*")
       .order("created_at", { ascending: false })
       .then(({ data, error }) => {
-        if (!error && data) {
+        if (error) {
+          if (isMissingTableError(error)) {
+            console.warn("Table message_wall is missing or loading. Operating safely.");
+          }
+          return;
+        }
+        if (data) {
           setNotes(data);
         }
       });
 
+    const channelName = `rt-wall-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const channel = supabase
-      .channel(CHANNELS.WALL)
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "message_wall" },

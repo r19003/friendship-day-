@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useRealtime } from "../components/realtime/RealtimeProvider";
+import { isMissingTableError } from "../lib/supabase";
 import { uploadMediaToStorage, validateMediaFile } from "../lib/mediaUpload";
-import { optimizeImage, generateThumbnail } from "../lib/imageOptimizer";
+import { optimizeImage } from "../lib/imageOptimizer";
 import { logActivity } from "../lib/activityLogger";
 
 export function useRealtimeMedia(galleryType = "shared", semesterNumber = null) {
   const { supabase, isConfigured, userRole, sessionId } = useRealtime();
   const [mediaList, setMediaList] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -31,15 +31,22 @@ export function useRealtimeMedia(galleryType = "shared", semesterNumber = null) 
     }
 
     query.order("created_at", { ascending: false }).then(({ data, error }) => {
-      if (!error && data) {
+      if (error) {
+        if (isMissingTableError(error)) {
+          console.warn("Table media_items is missing or loading. Operating safely.");
+        }
+        return;
+      }
+      if (data) {
         setMediaList(data);
         localStorage.setItem(storageKey, JSON.stringify(data));
       }
     });
 
     // Realtime channel
+    const channelName = `rt-media-${galleryType}-${semesterNumber || "all"}-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const channel = supabase
-      .channel(`realtime:media:${galleryType}:${semesterNumber || "all"}`)
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "media_items" },

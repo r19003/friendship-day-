@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRealtime } from "../components/realtime/RealtimeProvider";
+import { isMissingTableError } from "../lib/supabase";
 import { logActivity } from "../lib/activityLogger";
 
 const SEED_POLLS = [];
@@ -23,7 +24,13 @@ export function usePolls() {
       .select("*, poll_options(*, poll_votes(*))")
       .order("created_at", { ascending: false })
       .then(({ data, error }) => {
-        if (!error && data) {
+        if (error) {
+          if (isMissingTableError(error)) {
+            console.warn("Table polls is missing or loading. Operating safely.");
+          }
+          return;
+        }
+        if (data) {
           const formatted = data.map((p) => ({
             ...p,
             options: (p.poll_options || []).map((o) => ({
@@ -35,13 +42,14 @@ export function usePolls() {
         }
       });
 
+    const channelName = `rt-polls-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const channel = supabase
-      .channel("realtime:polls")
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "polls" },
         () => {
-          // Re-fetch
+          // Re-fetch handled gracefully if table exists
         }
       )
       .subscribe();
@@ -56,7 +64,7 @@ export function usePolls() {
       prev.map((poll) => {
         if (poll.id !== pollId) return poll;
 
-        const updatedOptions = poll.options.map((opt) => {
+        const updatedOptions = (poll.options || []).map((opt) => {
           const votesWithoutUser = (opt.votes || []).filter((v) => v !== userRole);
           if (opt.id === optionId) {
             return { ...opt, votes: [...votesWithoutUser, userRole] };

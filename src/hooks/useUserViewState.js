@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRealtime } from "../components/realtime/RealtimeProvider";
+import { isMissingTableError } from "../lib/supabase";
 
 export function useUserViewState(sectionName) {
   const { supabase, isConfigured, sessionId } = useRealtime();
@@ -20,8 +21,10 @@ export function useUserViewState(sectionName) {
           section_name: sectionName,
           last_viewed_at: nowIso,
         }], { onConflict: "user_id,room_id,section_name" });
-      } catch {
-        // Fallback
+      } catch (err) {
+        if (isMissingTableError(err)) {
+          console.warn("Table user_view_state is missing or loading. Operating safely.");
+        }
       }
     }
   };

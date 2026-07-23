@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRealtime } from "../components/realtime/RealtimeProvider";
+import { isMissingTableError } from "../lib/supabase";
 import { logActivity } from "../lib/activityLogger";
 
 const SEED_SONGS = [];
@@ -23,13 +24,20 @@ export function useSongRecommendations() {
       .select("*")
       .order("created_at", { ascending: false })
       .then(({ data, error }) => {
-        if (!error && data) {
+        if (error) {
+          if (isMissingTableError(error)) {
+            console.warn("Table song_recommendations is missing or loading. Operating safely.");
+          }
+          return;
+        }
+        if (data) {
           setSongs(data);
         }
       });
 
+    const channelName = `rt-songs-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const channel = supabase
-      .channel("realtime:songs")
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "song_recommendations" },

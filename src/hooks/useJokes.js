@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { supabase, isSupabaseConfigured, ensureAnonymousSession } from "../lib/supabase";
+import { supabase, isSupabaseConfigured, ensureAnonymousSession, isMissingTableError } from "../lib/supabase";
 import { validateJokeContent, sanitizeContent } from "../lib/jokeValidation";
 
 export function useJokes(tableName, seedData = []) {
@@ -18,6 +18,7 @@ export function useJokes(tableName, seedData = []) {
     ensureAnonymousSession().then((session) => {
       if (session) setSessionId(session.user?.id);
     });
+
     supabase
       .from(tableName)
       .select("*")
@@ -26,7 +27,11 @@ export function useJokes(tableName, seedData = []) {
       .then(({ data, error: err }) => {
         setLoading(false);
         if (err) {
-          setError(err.message);
+          if (isMissingTableError(err)) {
+            console.warn(`Table ${tableName} is missing or loading. Operating safely.`);
+          } else {
+            setError(err.message);
+          }
           setJokes([]);
         } else {
           setIsLive(true);
@@ -57,17 +62,21 @@ export function useJokes(tableName, seedData = []) {
         return { error: null };
       }
 
-      const { data, error: err } = await supabase
-        .from(tableName)
-        .insert([{ content: safe, display_name, category, reactions: baseReactions, session_id: sessionId }])
-        .select()
-        .single();
+      try {
+        const { data, error: err } = await supabase
+          .from(tableName)
+          .insert([{ content: safe, display_name, category, reactions: baseReactions, session_id: sessionId }])
+          .select()
+          .single();
 
-      if (err) {
+        if (err) {
+          setJokes((prev) => [newJoke, ...prev]);
+          return { error: null };
+        }
+        setJokes((prev) => [data, ...prev]);
+      } catch {
         setJokes((prev) => [newJoke, ...prev]);
-        return { error: null };
       }
-      setJokes((prev) => [data, ...prev]);
       return { error: null };
     },
     [tableName, sessionId]
@@ -78,7 +87,7 @@ export function useJokes(tableName, seedData = []) {
       setJokes((prev) =>
         prev.map((j) => {
           if (j.id !== jokeId) return j;
-          const reactions = { ...j.reactions };
+          const reactions = { ...(j.reactions || {}) };
           reactions[emoji] = (reactions[emoji] || 0) + 1;
           return { ...j, reactions };
         })
@@ -87,9 +96,13 @@ export function useJokes(tableName, seedData = []) {
       if (!isSupabaseConfigured) return;
       const joke = jokes.find((j) => j.id === jokeId);
       if (!joke) return;
-      const reactions = { ...joke.reactions };
+      const reactions = { ...(joke.reactions || {}) };
       reactions[emoji] = (reactions[emoji] || 0) + 1;
-      await supabase.from(tableName).update({ reactions }).eq("id", jokeId);
+      try {
+        await supabase.from(tableName).update({ reactions }).eq("id", jokeId);
+      } catch {
+        // Fallback
+      }
     },
     [tableName, jokes]
   );
@@ -98,7 +111,11 @@ export function useJokes(tableName, seedData = []) {
     async (jokeId) => {
       setJokes((prev) => prev.filter((j) => j.id !== jokeId));
       if (!isSupabaseConfigured) return;
-      await supabase.from(tableName).delete().eq("id", jokeId);
+      try {
+        await supabase.from(tableName).delete().eq("id", jokeId);
+      } catch {
+        // Fallback
+      }
     },
     [tableName]
   );

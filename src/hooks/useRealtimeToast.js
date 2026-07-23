@@ -19,9 +19,10 @@ export function useRealtimeToast() {
   useEffect(() => {
     if (!isConfigured || !supabase) return;
 
-    // Listen to real-time events across tables
+    // Unique channel instance for toasts listener
+    const channelName = `rt-toasts-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const channel = supabase
-      .channel("realtime:toasts")
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "chat_messages" },
