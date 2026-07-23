@@ -280,4 +280,18 @@ ALTER PUBLICATION supabase_realtime ADD TABLE public.song_recommendations;
 ALTER PUBLICATION supabase_realtime ADD TABLE public.polls;
 ALTER PUBLICATION supabase_realtime ADD TABLE public.chat_message_reads;
 
+-- ============================================================
+-- SUPABASE STORAGE BUCKET & POLICIES SETUP
+-- ============================================================
+
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('friendship-media', 'friendship-media', true)
+ON CONFLICT (id) DO NOTHING;
+
+CREATE POLICY "allow_public_select_friendship_media" ON storage.objects
+FOR SELECT USING (bucket_id = 'friendship-media');
+
+CREATE POLICY "allow_public_insert_friendship_media" ON storage.objects
+FOR INSERT WITH CHECK (bucket_id = 'friendship-media');
+
 NOTIFY pgrst, 'reload schema';

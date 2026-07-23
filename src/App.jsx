@@ -29,6 +29,7 @@ const HomePage = lazy(() => import("./pages/HomePage"));
 const AparnaPage = lazy(() => import("./pages/AparnaPage"));
 const SaayraPage = lazy(() => import("./pages/SaayraPage"));
 const ChaosPage = lazy(() => import("./pages/ChaosPage"));
+const AMIChatPage = lazy(() => import("./pages/AMIChatPage"));
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -40,6 +41,7 @@ function AnimatedRoutes() {
         <Route path="/aparna" element={<AparnaPage />} />
         <Route path="/saayra" element={<SaayraPage />} />
         <Route path="/our-chaos" element={<ChaosPage />} />
+        <Route path="/our-chaos/chat" element={<AMIChatPage />} />
         <Route
           path="*"
           element={
@@ -55,23 +57,32 @@ function AnimatedRoutes() {
   );
 }
 
+function MainLayout() {
+  const location = useLocation();
+  const isDedicatedChat = location.pathname === "/our-chaos/chat";
+
+  return (
+    <div className="app-root">
+      {!isDedicatedChat && <Navigation />}
+      <RealtimeToastContainer />
+      <main id="main-content" tabIndex={-1}>
+        <Suspense fallback={<LoadingState theme="shared" />}>
+          <AnimatedRoutes />
+        </Suspense>
+      </main>
+      {!isDedicatedChat && <SoundtrackShortcut />}
+      {!isDedicatedChat && <Footer />}
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <AppSectionErrorBoundary>
       <RealtimeProvider>
         <BrowserRouter>
           <ScrollToTop />
-          <div className="app-root">
-            <Navigation />
-            <RealtimeToastContainer />
-            <main id="main-content" tabIndex={-1}>
-              <Suspense fallback={<LoadingState theme="shared" />}>
-                <AnimatedRoutes />
-              </Suspense>
-            </main>
-            <SoundtrackShortcut />
-            <Footer />
-          </div>
+          <MainLayout />
         </BrowserRouter>
       </RealtimeProvider>
     </AppSectionErrorBoundary>

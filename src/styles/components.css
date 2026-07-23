@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════
    COMPONENTS SUPPLEMENT CSS
-   Missing classes from component implementations & Production Polish
+   Shared Button System & Form Control Styles
 ═══════════════════════════════════════════ */
 
 /* ── App root ── */
@@ -61,30 +61,98 @@ section {
   padding-block: var(--section-space-desktop);
 }
 
-/* ── Primary button ── */
+/* ── Shared Button System ── */
+.button,
 .primary-button {
+  min-height: 46px;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.75rem 1.75rem;
-  border-radius: var(--radius-pill);
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.72rem 1.35rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font: inherit;
   font-weight: 800;
-  font-size: 0.9rem;
-  border: 0;
+  font-size: 0.92rem;
   cursor: pointer;
-  transition: transform var(--transition-fast), box-shadow var(--transition-normal), opacity var(--transition-fast);
   text-decoration: none;
   white-space: nowrap;
   letter-spacing: 0.01em;
+  transition:
+    transform 200ms ease,
+    background-color 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    opacity 220ms ease;
 }
 
-.primary-button:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
-.primary-button:active { transform: translateY(0); }
-.primary-button:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.button:hover:not(:disabled),
+.primary-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
 
-.ghost-button { background: transparent !important; }
+.button:active:not(:disabled),
+.primary-button:active:not(:disabled) {
+  transform: translateY(0);
+}
 
-/* ── Premium Empty-State Shell (Prompt #28) ── */
+.button:focus-visible,
+.primary-button:focus-visible {
+  outline: 3px solid rgba(245, 207, 102, 0.72);
+  outline-offset: 3px;
+}
+
+.button:disabled,
+.primary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+  transform: none;
+}
+
+.button--chaos {
+  color: #fffaf1;
+  background: linear-gradient(135deg, #7851a2, #54336f);
+  box-shadow: 0 12px 30px rgba(20, 9, 34, 0.25);
+}
+
+.button--secondary,
+.ghost-button {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.button--danger {
+  color: #8f2f4d;
+  border-color: rgba(167, 61, 94, 0.2);
+  background: #fff1f5;
+}
+
+/* ── Form Control Styling ── */
+.friendship-control,
+.upload-input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.8rem 0.95rem;
+  color: #44384a;
+  border: 1px solid rgba(80, 62, 89, 0.18);
+  border-radius: 15px;
+  background: rgba(255, 253, 248, 0.96);
+  font: inherit;
+  font-size: 0.92rem;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.friendship-control:focus,
+.upload-input:focus {
+  outline: none;
+  border-color: rgba(122, 80, 160, 0.72);
+  box-shadow: 0 0 0 4px rgba(122, 80, 160, 0.13);
+}
+
+/* ── Premium Empty-State Shell ── */
 .premium-empty-state {
   position: relative;
   width: min(100%, 720px);
@@ -104,8 +172,7 @@ section {
       rgba(255, 253, 248, 0.96),
       rgba(246, 237, 252, 0.92)
     );
-  box-shadow:
-    0 18px 50px rgba(41, 28, 56, 0.08);
+  box-shadow: 0 18px 50px rgba(41, 28, 56, 0.08);
   color: var(--daisy-text);
 }
 

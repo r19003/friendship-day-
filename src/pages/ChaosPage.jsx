@@ -17,7 +17,7 @@ import SpotifySection from "../components/chaos/SpotifySection";
 import SemesterArchive from "../components/galleries/SemesterArchive";
 import AMIContractSection from "../components/chaos/AMIContractSection";
 import SharedBucketList from "../components/bucket-list/SharedBucketList";
-import ChaosChat from "../components/chat/ChaosChat";
+import AMIChatPreview from "../components/chat/AMIChatPreview";
 import MessageWall from "../components/message-wall/MessageWall";
 import TodayMemory from "../components/chaos/TodayMemory";
 import MoodCheckIn from "../components/chaos/MoodCheckIn";
@@ -67,7 +67,7 @@ export default function ChaosPage() {
         <AMIContractSection />
         <MoodCheckIn />
         <MemoryCapsules />
-        <ChaosChat />
+        <AMIChatPreview />
         <SharedBucketList />
         <CollaborativePolls />
         <SongRecommendations />
