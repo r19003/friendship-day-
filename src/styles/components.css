@@ -61,6 +61,23 @@ section {
   padding-block: var(--section-space-desktop);
 }
 
+/* ── Interactive Card System ── */
+.interactive-card {
+  transition:
+    transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 280ms ease,
+    border-color 280ms ease,
+    background-color 280ms ease;
+}
+
+.interactive-card:hover {
+  transform: translateY(-5px);
+}
+
+.interactive-card:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
 /* ── Shared Button System ── */
 .button,
 .primary-button {
