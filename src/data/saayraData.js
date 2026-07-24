@@ -9,10 +9,40 @@ export const saayraStory = {
   platonicHusband: "Platonic Husband",
 };
 
+export const nb107CopyText =
+  "I saw her there and thought she looked really cool, so I asked her about the class. While we were standing together, we noticed my Twitter and her wallpaper, and suddenly we had something to talk about. That one small discovery started a conversation—and since then, our chats and talks have never really stopped.";
+
 export const nb107Copy = [
-  "Our story began on 21 August 2023 in the NB-107 corridor.",
-  "You were holding your phone, and on the screen was a BTS wallpaper. I saw it, walked up to you, and asked the same question that started everything with Aparna: \"Are you an ARMY?\"",
-  "That single moment in a college corridor turned a complete stranger into one of the most permanent people in my life.",
+  "I saw her there and thought she looked really cool, so I asked her about the class.",
+  "While we were standing together, we noticed my Twitter and her wallpaper, and suddenly we had something to talk about.",
+  "That one small discovery started a conversation—and since then, our chats and talks have never really stopped.",
+];
+
+export const meetingMoments = [
+  {
+    number: 1,
+    title: "“I Saw Her and Thought She Looked Cool”",
+    supporting: "Some people catch your attention before you even know why.",
+    visualType: "corridor",
+  },
+  {
+    number: 2,
+    title: "“So I Asked About the Class”",
+    supporting: "It was a simple question, but it gave the conversation somewhere to begin.",
+    visualType: "question",
+  },
+  {
+    number: 3,
+    title: "“My Twitter. Her Wallpaper.”",
+    supporting: "While we were standing together, one small shared interest gave us an entire conversation.",
+    visualType: "cards",
+  },
+  {
+    number: 4,
+    title: "“And Then the Talking Never Stopped”",
+    supporting: "One conversation became another, then another—and somehow, there was always more to say.",
+    visualType: "chat",
+  },
 ];
 
 export const nb107BtsFeed = [
@@ -37,7 +67,7 @@ export const cakeRevealNotes = [
   "It created a core memory that I will carry for the rest of my life.",
 ];
 
-export const cakeFinalLine = "To this day, that homemade cake remains one of the sweetest gifts anyone has ever given名.";
+export const cakeFinalLine = "To this day, that homemade cake remains one of the sweetest gifts anyone has ever given me.";
 
 export const sunshineRays = [
   {
